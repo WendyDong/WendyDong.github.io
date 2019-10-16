@@ -1,0 +1,26 @@
+---
+layout:     post
+title:      "Hello DHH Blog"
+subtitle:   " \"Hello World, Hello Blog\""
+date:       2019-10-16 20:04:00
+author:     "DHH"
+header-img: "img/bg/hello.jpg"
+catalog: true
+tags:
+    - 生活
+    - Meta
+---
+
+> “Yeah It's on. ”
+
+
+DHH 的 Blog 就这么开通了。
+
+DHH要写点内容吧，记录一下学习，科研，生活。主要是觉得这个博客做的好好看，嘻嘻嘻。
+
+## 正文
+
+参考来自[Hux的博客](https://github.com/Huxpro/huxpro.github.io/blob/master/README.zh.md)
+
+
+
