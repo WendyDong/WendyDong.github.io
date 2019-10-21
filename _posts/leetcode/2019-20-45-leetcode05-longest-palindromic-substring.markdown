@@ -18,7 +18,7 @@ typora-root-url: ..\..
 
 ## 问题描述
 Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
-## DP方案（n2复杂度）
+## DP方案（n2 复杂度）
 此问题可以使用动态规划的方式解决，动态规划状态表达为
 
 ![05-dp](/img/leetcode/05-dp.png)
