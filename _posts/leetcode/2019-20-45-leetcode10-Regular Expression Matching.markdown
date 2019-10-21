@@ -9,7 +9,7 @@ catalog: true
 tags:
     - leetcode
     - DP
-	- string
+    - string
 typora-root-url: ..\..
 ---
 
