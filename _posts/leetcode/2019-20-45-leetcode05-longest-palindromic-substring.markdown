@@ -2,7 +2,7 @@
 layout:     post
 title:      "最长的palindromic子字符串问题"
 subtitle:   " DP问题 马拉车算法(MANACHER'S ALGORITHM)"
-date:       2019-10-16 20:45:00
+date:       2019-10-16 21:45:00
 author:     "DHH"
 header-img: "img/bg/leetcodebg.jpg"
 catalog: true
@@ -10,7 +10,7 @@ tags:
     - leetcode
     - DP
     - MANACHER'S
-	- string
+    - string
 typora-root-url: ..\..
 ---
 
