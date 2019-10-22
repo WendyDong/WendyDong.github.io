@@ -1,0 +1,124 @@
+---
+layout:     post
+title:      "3sum"
+subtitle:   " DP问题 贪心算法"
+date:       2019-10-22 10:13:00
+author:     "DHH"
+header-img: "img/bg/leetcodebg.jpg"
+catalog: true
+tags:
+    - leetcode
+    - Array
+typora-root-url: ..\..
+---
+
+> “Yeah It's leetcode problem. ”
+
+## 问题描述
+
+ 给定一个数组nums, 包含n个数字，找出三个元素 a,b,c 使得a+b+c=0, 找出所有的组合（不重复）
+
+**Example:**
+
+```
+Given array nums = [-1, 0, 1, 2, -1, -4],
+A solution set is:
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+```
+
+## Brute Force
+
+一一遍历，o（n3）
+
+## 知识储备
+
+学习到了如何对vector去重
+
+`vector.erase(unique(vector.begin(), vector.end()), vector.end())`
+
+1.  unique函数属于STL中比较常用函数，它的功能是元素去重。即**”删除”序列中所有相邻的重复元素(只保留一个)。此处的删除，并不是真的删除，而是指重复元素的位置被不重复的元素给占领了** 。
+
+   unique函数的函数原型如下：
+
+   1. 只有两个参数，且参数类型都是迭代器：
+
+   ```c++
+   `iterator unique(iterator it_1,iterator it_2);`
+   ```
+
+    
+
+   这种类型的unique函数是我们最常用的形式。其中这两个参数表示对容器中[it_1，it_2)范围的元素进行去重(**注：区间是前闭后开，即不包含it_2所指的元素**),返回值是一个迭代器，**它指向的是去重后容器中不重复序列的最后一个元素的下一个元素**。
+
+   2. 有三个参数，且前两个参数类型为迭代器，最后一个参数类型可以看作是bool类型：
+
+   ```
+   `iterator unique(iterator it_1,iterator it_2,``bool` `MyFunc);`
+   ```
+
+   该类型的unique函数我们使用的比较少，其中前两个参数和返回值同上面类型的unique函数是一样的，主要区别在于第三个参数。这里的第三个参数表示的是**自定义元素是否相等**。也就是说通过自定义两个元素相等的规则，来对容器中元素进行去重。
+
+1. erase()
+
+    erase()函数用于在顺序型容器中删除容器的一个元素，有两种函数原型，c.erase(p),c.erase(b,e);第一个删除迭代器p所指向的元素，第二个删除迭代器b,e所标记的范围内的元素，c为容器对象，返回值都是一个迭代器，**该迭代器指向被删除元素后面的元素。**
+
+
+
+## Two pointers
+
+考虑2sum问题，会先对数组进行排序，排序耗时o(nlgn)，在通过两个指针 一前一后，找到2sum的组合。时间复杂度为nlgn
+
+3sum的问题可以借鉴2sum的问题。排序之后，通过遍历每一个元素i，找到这个元素之后的2sum，使得2sum的和为-nums[i]即可，时间复杂度为o(n2)。
+
+需要注意的是，我们要保证找的的3sum的triplet组合是unique的，这就有两种方法：
+
+* 使用set集合，或者对最终的vector进行去重
+
+* 在遍历元素的时候，如果发现当前元素与上一元素相同，则不跳过这个元素
+
+  
+
+代码：
+
+```c++
+class Solution {
+public:
+        vector<vector<int>> threeSum(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        vector<vector<int>> re;
+        if (nums.size()<3){
+            return re;
+        }
+        for (int i=0;i<nums.size()-2;i++){
+            int left=i+1;
+            int right=nums.size()-1;
+            // 避免triplet[0]的重复元素
+            while(left<right and (i==0 or nums[i]!=nums[i-1])){
+                if (nums[i]+nums[left]+nums[right]>0){
+                    right--;
+                }
+                else if (nums[i]+nums[left]+nums[right]<0){
+                    left++;
+                }
+                else{
+                    vector<int> triplet(3, 0);
+                    triplet[0] = nums[i];
+                    triplet[1] = nums[left];
+                    triplet[2] = nums[right];
+                    re.push_back(triplet);
+                    // 避免triplet[1]的重复元素
+                    while (left < right && nums[left] == triplet[1]) left++;
+                    // 避免triplet[2]的重复元素
+                    while (left < right && nums[right] == triplet[2]) right--;
+                }
+            }
+        }
+        // re.erase(unique(re.begin(), re.end()), re.end());
+        return re;
+    }
+};
+```
+
