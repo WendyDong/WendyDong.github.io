@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "移除链表的倒数第N个节点 Remove Nth Node From End of List"
+title:      "移除链表的倒数第N个节点(19) Remove Nth Node From End of List"
 subtitle:   " 链表 两个指针 "
 date:       2019-10-23 19:22:00
 author:     "DHH"

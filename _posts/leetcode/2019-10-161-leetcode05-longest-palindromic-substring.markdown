@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      "最长的palindromic子字符串问题"
+title:      "最长的palindromic子字符串问题(05) longest palindromic substring"
 subtitle:   " DP问题 马拉车算法(MANACHER'S ALGORITHM)"
 date:       2019-10-16 21:45:00
 author:     "DHH"
