@@ -1,0 +1,26 @@
+I"�<blockquote>
+  <p>“Come on！ ”</p>
+</blockquote>
+
+<h2 id="目标检测">目标检测</h2>
+
+<ul>
+  <li>nms（手写</li>
+  <li>极大值抑制</li>
+  <li>ssd</li>
+  <li>faster rcnn</li>
+</ul>
+
+<h2 id="机器学习">机器学习</h2>
+
+<ul>
+  <li>卷积 性质等</li>
+  <li>反向传播推导</li>
+  <li>bn 计算</li>
+  <li>损失函数</li>
+  <li>优化器</li>
+</ul>
+
+<h2 id="概率题">概率题</h2>
+
+:ET

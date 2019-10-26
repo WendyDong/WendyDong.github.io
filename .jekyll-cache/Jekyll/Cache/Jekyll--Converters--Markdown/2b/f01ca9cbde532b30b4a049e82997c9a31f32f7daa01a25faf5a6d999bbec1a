@@ -1,12 +1,13 @@
-I"_*<blockquote>
+I"yJ<blockquote>
   <p>“Yeah It’s leetcode problem. ”</p>
 </blockquote>
 
 <h2 id="问题描述">问题描述</h2>
 <p>Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.</p>
-<h2 id="dp方案n2复杂度">DP方案（n2复杂度）</h2>
-<p>此问题可以使用动态规划的方式解决，动态规划状态表达为
-<img src="/img/leetcode/05-dp.png" alt="img" /></p>
+<h2 id="dp方案n2-复杂度">DP方案（n2 复杂度）</h2>
+<p>此问题可以使用动态规划的方式解决，动态规划状态表达为</p>
+
+<p><img src="/img/leetcode/05-dp.png" alt="05-dp" /></p>
 
 <p>基于上图，c++实现代码为：</p>
 
@@ -112,5 +113,88 @@
 <h2 id="马拉车算法-manachers-algorithm线性复杂度">马拉车算法 MANACHER’S ALGORITHM（线性复杂度）</h2>
 
 <p>参考自文章<a href="https://www.cnblogs.com/grandyang/p/4475985.html">blog</a></p>
+
+<p>马拉车算法利用前面算过的回文字符串信息去算接下来的，主要几点思想是</p>
+
+<p>由于回文串的长度可奇可偶，比如 “bob” 是奇数形式的回文，”noon” 就是偶数形式的回文，马拉车算法的第一步是预处理，做法是在每一个字符的左右都加上一个特殊字符，比如加上 ‘#’，那么</p>
+
+<p>bob   –&gt;   #b#o#b#</p>
+
+<p>noon   –&gt;   #n#o#o#n#</p>
+
+<ul>
+  <li>处理之后得到的字符串的个数都是奇数个</li>
+  <li>需要在前面增加一个字符 ，加上之后，规律为：最长子串的长度是半径减1，起始位置是中间位置减去半径再除以2。 例如 “noon”，中间的 ‘#’ 在字符串 “$#n#o#o#n#” 中的位置是5，半径也是5，相减并除以2还是0</li>
+</ul>
+
+<p>求解p数组：</p>
+
+<p>需要新增两个辅助变量 mx 和 id，其中 id 为能延伸到最右端的位置的那个回文子串的中心点位置，mx 是回文串能延伸到的最右端的位置，需要注意的是，这个 mx 位置的字符不属于回文串，所以才能用 mx-i 来更新 p[i] 的长度而不用加1，由 mx 的更新方式 mx = i + p[i] 也能看出来 mx 是不在回文串范围内的，这个算法的最核心的一行如下：</p>
+
+<p><code class="highlighter-rouge">p[i] = mx &gt; i ? min(p[2 * id - i], mx - i) : 1;</code></p>
+
+<p>如果 mx &gt; i, 则 p[i] = min( p[2 * id - i] , mx - i )</p>
+
+<p>否则，p[i] = 1</p>
+
+<p>当 mx - i &gt; P[j] 的时候，以 S[j] 为中心的回文子串包含在以 S[id] 为中心的回文子串中，由于 i 和 j 对称，以 S[i] 为中心的回文子串必然包含在以 S[id] 为中心的回文子串中，所以必有 P[i] = P[j]，其中 j = 2<em>id - i，因为 j 到 id 之间到距离等于 id 到 i 之间到距离，为 i - id，所以 j = id - (i - id) = 2</em>id - i，参见下图。</p>
+
+<p><img src="/img/leetcode/05-mlc-01.png" alt="05-mlc-01" /></p>
+
+<p>当 P[j] &gt;= mx - i 的时候，以 S[j] 为中心的回文子串不一定完全包含于以 S[id] 为中心的回文子串中，但是基于对称性可知，下图中两个绿框所包围的部分是相同的，也就是说以 S[i] 为中心的回文子串，其向右至少会扩张到 mx 的位置，也就是说 P[i] = mx - i。至于 mx 之后的部分是否对称，就只能老老实实去匹配了，这就是后面紧跟到 while 循环的作用。</p>
+
+<p><img src="/img/leetcode/05-mlc-02.png" alt="05-mlc-02" /></p>
+
+<p>对于 mx &lt;= i 的情况，无法对 P[i] 做更多的假设，只能 P[i] = 1，然后再去匹配了。</p>
+
+<p>c++实现代码：</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="rouge-code"><pre><span class="n">string</span> <span class="nf">longestPalindrome</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">string</span> <span class="n">t</span> <span class="o">=</span> <span class="s">"$#"</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">t</span> <span class="o">+=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">t</span> <span class="o">+=</span> <span class="s">"#"</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Process t</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="n">mx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">id</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">resLen</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">resCenter</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">t</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">){</span>
+        <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">mx</span> <span class="o">&gt;</span> <span class="n">i</span> <span class="o">?</span> <span class="n">min</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">id</span> <span class="o">-</span> <span class="n">i</span><span class="p">],</span> <span class="n">mx</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">==</span> <span class="n">t</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span> <span class="o">++</span><span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">mx</span> <span class="o">&lt;</span> <span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">mx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">id</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">resLen</span> <span class="o">&lt;</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+            <span class="n">resLen</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+            <span class="n">resCenter</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="n">substr</span><span class="p">((</span><span class="n">resCenter</span> <span class="o">-</span> <span class="n">resLen</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">resLen</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
 
 :ET

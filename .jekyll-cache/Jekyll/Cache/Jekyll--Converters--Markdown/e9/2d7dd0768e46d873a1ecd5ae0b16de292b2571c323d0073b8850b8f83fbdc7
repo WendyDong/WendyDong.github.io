@@ -1,0 +1,82 @@
+I"�<blockquote>
+  <p>“Yeah It’s leetcode problem. ”</p>
+</blockquote>
+
+<h2 id="问题描述">问题描述</h2>
+
+<p>Given a string containing just the characters <code class="highlighter-rouge">'('</code>, <code class="highlighter-rouge">')'</code>, <code class="highlighter-rouge">'{'</code>, <code class="highlighter-rouge">'}'</code>, <code class="highlighter-rouge">'['</code> and <code class="highlighter-rouge">']'</code>, determine if the input string is valid.</p>
+
+<p>An input string is valid if:</p>
+
+<ol>
+  <li>Open brackets must be closed by the same type of brackets.</li>
+  <li>Open brackets must be closed in the correct order.</li>
+</ol>
+
+<p>Note that an empty string is also considered valid.</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>Input: "()"
+Output: true
+Input: "([)]"
+Output: false
+Input: "{[]}"
+Output: true
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>Note:</strong></p>
+
+<p>这个题挺简单的，就是要让给定的这三组括号成对即可，例如有了（下一个如果再碰到右括号就必须是）,左括号就可以无所谓，自然就能想到用栈来做这个题。直接上代码吧</p>
+
+<h2 id="代码">代码</h2>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">bool</span> <span class="n">isValid</span><span class="p">(</span><span class="n">string</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">stack</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">paren</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">char</span><span class="o">&amp;</span> <span class="n">c</span> <span class="o">:</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">//不同于if 会自动顺延到下一项，直到遇到break</span>
+                <span class="k">case</span> <span class="sc">'('</span><span class="p">:</span> 
+                <span class="k">case</span> <span class="sc">'{'</span><span class="p">:</span> 
+                <span class="k">case</span> <span class="sc">'['</span><span class="p">:</span> <span class="n">paren</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">c</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="sc">')'</span><span class="p">:</span> <span class="k">if</span> <span class="p">(</span><span class="n">paren</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">paren</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="o">!=</span><span class="sc">'('</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="k">else</span> <span class="n">paren</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="sc">'}'</span><span class="p">:</span> <span class="k">if</span> <span class="p">(</span><span class="n">paren</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">paren</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="o">!=</span><span class="sc">'{'</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="k">else</span> <span class="n">paren</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="sc">']'</span><span class="p">:</span> <span class="k">if</span> <span class="p">(</span><span class="n">paren</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">||</span> <span class="n">paren</span><span class="p">.</span><span class="n">top</span><span class="p">()</span><span class="o">!=</span><span class="sc">'['</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="k">else</span> <span class="n">paren</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span> <span class="k">break</span><span class="p">;</span>
+                <span class="nl">default:</span> <span class="p">;</span> <span class="c1">// pass</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">paren</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="p">;</span>
+        
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+:ET
