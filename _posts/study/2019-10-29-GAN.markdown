@@ -1,0 +1,30 @@
+---
+layout:     post
+title:      "GAN的有关记录"
+subtitle:   " 记录一下学习内容 "
+date:       2019-10-29 19:59:00
+author:     "DHH"
+header-img: "img/bg/hello.jpg"
+catalog: true
+tags:
+    - GAN
+    - Study
+
+---
+
+
+> “Come on！ ”
+
+## 学习资料
+
+*  [李宏毅视频](https://www.youtube.com/watch?v=0CKeqXl5IY0&feature=youtu.be),  [课件](http://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2017/Lecture/GAN (v11).pdf) 。
+* [知乎-gan小的总结]( https://zhuanlan.zhihu.com/p/32103958 ), [知乎-gan训练技巧]( https://zhuanlan.zhihu.com/p/52404647 )
+
+## 内容速记
+
+#### 一、VAE 自编码器
+
+在VAE中，不仅会生成mi 向量，还会生成噪音，把噪音和m叠加在一起，再去decoder，不过在重建过程中，会倾向去把噪音的系数sigma置为0，所以引入了右下方的minimize。具体可参考[VAE说明]( https://www.cnblogs.com/fxjwind/p/9099931.html )。
+
+![VAE](E:\Users\William\AppData\OneDrive\DHH.github.io\img\study\VAE.png)
+
