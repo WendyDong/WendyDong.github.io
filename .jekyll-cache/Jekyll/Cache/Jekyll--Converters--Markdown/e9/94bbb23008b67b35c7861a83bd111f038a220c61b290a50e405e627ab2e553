@@ -1,0 +1,76 @@
+I"�<blockquote>
+  <p>“Yeah It’s leetcode problem. ”</p>
+</blockquote>
+
+<h2 id="问题描述">问题描述</h2>
+
+<p>问题很容易理解，给定一个不重复的数组，找到第一个缺失的正整数。</p>
+
+<p>Given an unsorted integer array, find the smallest missing positive integer.</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>Input: [3,4,-1,1]
+Output: 2
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>Note:</strong></p>
+
+<p>Your algorithm should run in <em>O</em>(<em>n</em>) time and uses constant extra space.</p>
+
+<h2 id="思路分析">思路分析</h2>
+
+<p>这个题想让我们在const 空间内完成，就要思考一下了，最直观的想法是这样的，假设数组的长度为len, 那么这个first missing就一定小于len+1, 所以我们可以建立一个len+1大小的数组，按顺序遍历nums, 如果出现了len+1中的某一个数字，就给数组对应的位置置为true, 最后遍历这个数组，找到第一个false的位置就可以了。不过这个方法需要耗费o(len)的空间，太浪费了。所以可以换一个思路</p>
+
+<p>当我们遍历到位置 i 的一个数字n时，如果i!=n-1, 且n&gt;0,n&lt;len我们就要把n换到它应该呆的位置，即n-1，所以就把n-1和i处的数字交换，直到满足条件位置。 空间复杂度降为1，时间复杂度仍然是o(n)。</p>
+
+<p>这一题跟类似剑指offer面试题3思路相同，可以一起复习。</p>
+
+<h3 id="1--vector-拷贝">1.  vector 拷贝</h3>
+
+<p><code class="highlighter-rouge">b.assign(a.begin()+i, a.end());</code></p>
+
+<p>以上代码将a中[i-结尾]的部分拷贝给了b</p>
+
+<h3 id="2-vector-排序">2. vector 排序</h3>
+
+<p><code class="highlighter-rouge">sort(candidates.begin(),candidates.end());</code></p>
+
+<h3 id="3-vector-求和">3. vector 求和</h3>
+
+<h2 id="代码">代码</h2>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="kt">int</span> <span class="n">firstMissingPositive</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">n</span><span class="o">=</span><span class="n">nums</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">while</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">n</span> <span class="o">&amp;&amp;</span> <span class="n">nums</span><span class="p">[</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">swap</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">nums</span><span class="p">[</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]);</span>
+        
+        <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        
+        <span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET

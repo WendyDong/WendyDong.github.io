@@ -1,0 +1,176 @@
+I"�3<blockquote>
+  <p>“Yeah It’s leetcode problem. ”</p>
+</blockquote>
+
+<h3 id="子数组问题">子数组问题</h3>
+
+<h4 id="前缀和解决sliding-window">前缀和解决+sliding window</h4>
+
+<p>​		<a href="https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/">leetcode 862</a> Shortest Subarray with Sum at Least K（其中discuss里面有个<a href="https://leetcode.com/problems/shortest-subarray-with-sum-at-least-k/discuss/151169/my-solution-O(nlgn)-use-segment-tree">解法</a>用<a href="http://dongxicheng.org/structure/segment-tree/">线段树</a>做的）</p>
+
+<p>​		<a href="https://leetcode.com/problems/maximum-size-subarray-sum-equals-k/">leetcode 325</a> Maximum Size Subarray Sum Equals k</p>
+
+<p>​		<a href="https://leetcode.com/problems/subarray-product-less-than-k/">leetcode 713</a> Subarray Product Less Than K</p>
+
+<p>​		<a href="https://leetcode.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/">leetcode 1292</a> Maximum Side Length of a Square with Sum Less than or Equal to Threshold (这个题是二维矩阵，跟上面俩差不多)</p>
+
+<p>​		<a href="https://leetcode.com/problems/number-of-submatrices-that-sum-to-target/">leetcode 1074</a> 二维矩阵的sliding window</p>
+
+<p>​		<a href="https://leetcode.com/problems/sliding-window-maximum/">leetcode 239</a> Sliding Window Maximum</p>
+
+<h4 id="二分查找">二分查找</h4>
+
+<p>​		<a href="https://leetcode.com/problems/split-array-largest-sum/">leetcode 410</a> Split Array Largest Sum 将一个数组分为m个连续的子数组，最小化其最大子数组和（可以用dp或者二分解决）</p>
+
+<p>​		<a href="https://leetcode.com/problems/divide-chocolate/">leetcode 1231</a> Divide Chocolate 跟410题一样</p>
+
+<p>​		<a href="https://leetcode.com/problems/longest-increasing-subsequence/">leetcode 300</a>  Longest Increasing Subsequence 经典题目，求最长的递增子串LIS。可以用dp做，复杂度比较高o(n^2)。用一个candidate数组模拟这个最长子串（o(nlgn)）。例如已有的一个LIS为0 5 ，现在来了一个新的数字，3，因为3是小于5的，所以3的加入不能带来最终结果长度的增长，但是可以带来现有的优化，把现有的0 5 替换为0 3 ，如果以后来了一个新的数字4 ，就可以变成 0 3 4 ，带来增长，所以我们可以维护一个这样的candidate，这个candidate的最终的长度就是LIS的最终长度，但是candidate的内容并不有效。 如果现有candidate为 0 2 5 7，来了一个新的数字3 ，我们要把5换成3，所以candidate的内容其实并不是一个LIS,只是最长长度与LIS的最长长度相同。</p>
+
+<p>​		<a href="https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/">leetcode 1011 </a> <em>Capacity To Ship Packages Within D Days</em></p>
+
+<h4 id="dp">DP</h4>
+
+<p>​		<a href="https://leetcode.com/problems/split-array-into-consecutive-subsequences/">leetcode 659</a> Split Array into Consecutive Subsequences, 判断数组能不能被拆分成几个连续的子数组，例如234456就可以。</p>
+
+<p>​		<a href="https://leetcode.com/problems/minimum-window-subsequence/">leetcode 717</a> Minimum Window Subsequence <a href="https://www.cnblogs.com/grandyang/p/8684817.html">最小窗口序列</a>问题，判断S中的最小window W，使得T是W的子序列，即T中字符出现的顺序要跟W一样。如果不要求顺序一致的话，就是底下那个滑动窗口的第76题</p>
+
+<p>​		<a href="https://leetcode.com/problems/target-sum/">leetcode 494</a> Target Sum</p>
+
+<p>​		<a href="https://leetcode.com/problems/longest-string-chain/">leetcode 1048</a> Longest String Chain 从字符list中挑选出word，使得word依次比上一个多一个字符，求能组成的最大长度。跟300有点像。</p>
+
+<p>​		<a href="https://leetcode.com/problems/partition-equal-subset-sum/">leetcode 416</a>  Partition Equal Subset Sum 变相背包问题</p>
+
+<p>​		<a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/submissions/">leetcode 309</a> Best Time to Buy and Sell Stock with Cooldown 状态转移的dp</p>
+
+<p>​		<a href="https://leetcode.com/problems/maximum-product-subarray/">leetcode 152</a> Maximum Product Subarray, 将DP分成正负来看。</p>
+
+<h4 id="滑动窗口">滑动窗口</h4>
+
+<p>​		<a href="https://leetcode.com/problems/minimum-window-substring/">leetcode 76</a> Minimum Window Substring</p>
+
+<p>​		<a href="https://leetcode.com/problems/substring-with-concatenation-of-all-words">leetcode 30</a> Substring with Concatenation of All Words 和76很像</p>
+
+<p>​</p>
+
+<h3 id="图的问题">图的问题</h3>
+
+<p>​		<a href="https://leetcode.com/problems/optimize-water-distribution-in-a-village/">leetcode1168</a> 最小生成树（参考链接：<a href="https://www.cnblogs.com/ggzhangxiaochao/p/9070873.html">prim和Kruskal算法</a> , <a href="https://blog.csdn.net/curry___/article/details/81742727">邻接表和邻接矩阵的区别</a>）</p>
+
+<p>​		<a href="https://leetcode.com/problems/optimal-account-balancing/">leetcode 465</a> Optimal Account Balancing</p>
+
+<p>​		<a href="https://leetcode.com/problems/course-schedule/">leetcode 207</a> Course Schedule DFS的做法多看一下</p>
+
+<p>​		<a href="https://leetcode.com/problems/sequence-reconstruction/">leetcode 444</a> Sequence Reconstruction <a href="https://www.cnblogs.com/bigsai/p/11489260.html">拓扑排序</a></p>
+
+<p>​		<a href="https://leetcode.com/problems/sentence-similarity-ii/submissions/">leetcode 737</a> Sentence Similarity II 一个DSU 问题 熟悉一下union-set的写法 <a href="https://www.jianshu.com/p/b5b8d488266e">by-rank</a></p>
+
+<p>​		<a href="https://leetcode.com/problems/network-delay-time/">leetcode 743</a> Network Delay Time 有向图</p>
+
+<p>​		<a href="https://leetcode.com/problems/pacific-atlantic-water-flow">Pacific Atlantic Water Flow</a> 一个比较复杂的图的遍历问题。</p>
+
+<p>​		<a href="https://leetcode.com/problems/longest-consecutive-sequence/">leetcode 128</a> Longest Consecutive Sequence 一个union find比较特殊的例子</p>
+
+<h3 id="minmax问题">MinMax问题</h3>
+
+<p>​		<a href="https://leetcode.com/problems/guess-the-word/">leetcode843</a> Guess the Word</p>
+
+<h3 id="不容易想">不容易想</h3>
+
+<p>​		<a href="https://leetcode.com/problems/string-transforms-into-another-string/">leetcode 1153</a> String Transforms Into Another String (注意最后判断是否小于26)</p>
+
+<p>​		<a href="https://leetcode.com/problems/confusing-number-ii/">leetcode 1088</a> Confusing Number II（dfs）</p>
+
+<p>​		<a href="https://leetcode.com/problems/my-calendar-iii/">leetcode 732</a> My Calendar III (用start区间和end区间解决)</p>
+
+<h3 id="二维矩阵">二维矩阵</h3>
+
+<p>​		<a href="https://leetcode.com/problems/shortest-distance-from-all-buildings/">leetcode 317</a>  Shortest Distance from All Buildings</p>
+
+<p>​		<a href="https://leetcode.com/problems/max-sum-of-rectangle-no-larger-than-k/">leetcode 363</a> Max Sum of Rectangle No Larger Than K：在矩阵中找到一个最大的和的子矩阵，并且和不能超过K(类似题目：在数组中找到子数组，和最大且不超过K。<a href="https://www.quora.com/Given-an-array-of-integers-A-and-an-integer-k-find-a-subarray-that-contains-the-largest-sum-subject-to-a-constraint-that-the-sum-is-less-than-k">o(nlgn)解法</a>)</p>
+
+<p>​	<a href="https://leetcode.com/problems/rotate-image/">leetcode 48</a> Rotate Image 图片顺时针旋转，可以先上下翻转，再转置，逆时针旋转：先左右翻转，再转置。</p>
+
+<h3 id="树的dfs">树的DFS</h3>
+
+<p>​		<a href="https://leetcode.com/problems/count-complete-tree-nodes/">leetcode 314</a> Count Complete Tree Nodes 计算二叉完全树的节点个数</p>
+
+<h3 id="树的bfs">树的BFS</h3>
+
+<p>​		<a href="https://leetcode.com/problems/populating-next-right-pointers-in-each-node-ii">leetcode 117</a> Populating Next Right Pointers in Each Node II</p>
+
+<p>​		<a href="https://leetcode.com/problems/all-nodes-distance-k-in-binary-tree">leetcode 863</a> All Nodes Distance K in Binary Tree</p>
+
+<h3 id="string">String</h3>
+
+<p>​		<a href="https://leetcode.com/problems/number-of-atoms/">leetcode 726</a> Number of Atoms 多个括号嵌套的问题，可以用dfs 或者stack解决。我觉得dfs更直观</p>
+
+<p>​		<strong><a href="https://leetcode.com/problems/basic-calculator-iii/">leetcode 772</a> Basic Calculator III</strong> <strong>自己做一遍！！！</strong></p>
+
+<p>​		<a href="https://leetcode.com/problems/decode-string/">leetcode 394</a> Decode String 跟上个题差不多 更基础点 也是嵌套问题。</p>
+
+<p>​		<a href="https://leetcode.com/problems/design-search-autocomplete-system/">leetcode 642</a> Design Search Autocomplete System</p>
+
+<p>​		<a href="https://leetcode.com/problems/bulls-and-cows/">leetcode 299</a> Bulls and Cows</p>
+
+<p>​		<a href="https://leetcode.com/problems/palindrome-pairs/">leetcode 336</a> Palindrome Pairs 可以用hashtable, 也可以用字典树</p>
+
+<h3 id="sort">SORT</h3>
+
+ 		<a href="https://leetcode.com/problems/sort-list/">leetcode 148</a> Sort List 对一个链表进行排序，时间复杂度为o(nlgn)，空间复杂度为o(1) 。应该自然想到需要使用归并排序。
+
+<p>​		<a href="https://leetcode.com/problems/count-of-smaller-numbers-after-self/">leetcode 315</a> Count of Smaller Numbers After Self</p>
+
+<h3 id="数组">数组</h3>
+
+<p>​		<a href="https://leetcode.com/problems/hand-of-straights/">leetcode 846</a>  Hand of Straights</p>
+
+<p>​		<a href="https://leetcode.com/problems/median-of-two-sorted-arrays/">leetcode 4</a> Median of Two Sorted Arrays</p>
+
+<p>​		<a href="https://leetcode.com/problems/next-permutation/">leetcode 31</a> Next Permutation</p>
+
+<p>​		<a href="https://leetcode.com/problems/largest-rectangle-in-histogram/solution/">largest rectangle in histogram</a> 用栈解决</p>
+
+<p>​		<a href="https://leetcode.com/problems/non-overlapping-intervals">Non-overlapping Intervals</a> merge intervals</p>
+
+<h3 id="链表">链表</h3>
+
+<p>​		<a href="https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/">leetcode 430</a> <em>Flatten a Multilevel Doubly Linked List</em></p>
+
+<p>​		<a href="https://leetcode.com/problems/add-two-numbers/">leetcode 2</a> Add Two Numbers</p>
+
+<p>​		<a href="https://leetcode.com/problems/merge-k-sorted-lists/">leetcode 23</a> Merge k Sorted Lists</p>
+
+<p>​		<a href="https://leetcode.com/problems/sort-list/">leetcode 148</a> Sort List</p>
+
+<p>​		<a href="https://leetcode.com/problems/reorder-list/">leetcode 143</a> Reorder List</p>
+
+<h3 id="backtracking">backtracking</h3>
+
+<p>​		<a href="https://leetcode.com/problems/path-with-maximum-gold/">leetcode 1219</a> Path with Maximum Gold</p>
+
+<p>​		<a href="https://leetcode.com/problems/remove-invalid-parentheses/">leetcode 301</a> Remove Invalid Parentheses</p>
+
+<h3 id="top-k-elements">Top K Elements</h3>
+
+<ol>
+  <li><a href="https://leetcode.com/problems/kth-largest-element-in-an-array">Kth Largest Element in an Array</a> 堆排序-&gt;<strong>快排</strong></li>
+  <li><a href="https://leetcode.com/problems/kth-smallest-element-in-a-bst">Kth Smallest Element in a BST</a> 利用二叉树的中序遍历-&gt;大量数据时可参考<strong><a href="https://leetcode.com/problems/lru-cache/">146 题</a> LRU用list解决</strong></li>
+  <li><a href="https://leetcode.com/problems/top-k-frequent-elements">Top K Frequent Elements</a> 用优先队列对频率排序</li>
+  <li><a href="https://leetcode.com/problems/sort-characters-by-frequency">Sort Characters By Frequency</a> 跟上一个类似</li>
+  <li><strong><a href="https://leetcode.com/problems/course-schedule-iii">Course Schedule III</a></strong> 用堆解决 跟<a href="https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/">Maximum Number of Events That Can Be Attended</a> 有点相似</li>
+  <li><a href="https://leetcode.com/problems/find-k-closest-elements">Find K Closest Elements</a> 二分查找的感觉</li>
+  <li><a href="https://leetcode.com/problems/reorganize-string">Reorganize String</a> 先计算频率再利用优先队列</li>
+  <li><a href="https://leetcode.com/problems/maximum-frequency-stack">Maximum Frequency Stack</a> 两个map实现，一个放数字-频率，一个是频率-对应的stack</li>
+  <li><a href="https://leetcode.com/problems/k-closest-points-to-origin">K Closest Points to Origin</a> 跟第一个很像，相当于求最小的k个元素（可以无序），所以也是两种做法，找到第k个位置就行。</li>
+  <li><a href="https://leetcode.com/problems/kth-smallest-element-in-a-sorted-matrix">Kth Smallest Element in a Sorted Matrix</a> 二分</li>
+</ol>
+
+<h3 id="递增栈">递增栈</h3>
+
+<p>​	蓄水池 最大矩形面积，</p>
+
+<p>​	<a href="https://leetcode.com/problems/largest-rectangle-in-histogram/">leetcode 84</a> Largest Rectangle in Histogram直方图面积</p>
+
+<p>​	<a href="https://leetcode.com/problems/maximal-rectangle/">leetcode 85</a> Maximal Rectangle直方图面积的二维版本</p>
+
+:ET

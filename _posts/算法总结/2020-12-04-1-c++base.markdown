@@ -1,0 +1,366 @@
+---
+layout:     post
+title:      " C++基础知识 "
+subtitle:   " C++基本用法 "
+date:       2020-12-04 16:09:00
+author:     "DHH"
+header-img: "img/bg/leetcodebg.jpg"
+catalog: true
+tags:
+    - leetcode
+    - Basic
+typora-root-url: ..\..
+---
+
+> “Yeah It's leetcode problem. ”
+
+## 一些小方法
+
+1、判断一个char类型的字符是否为数字
+
+  way1:
+
+```c++
+if(c >='0' && c<='9')printf("是数字\n");
+else  if(c >='a' && c<='z' ||  c >='A' && c<='Z'))
+        printf("是字母\n");
+```
+
+  way2 :
+
+```c++
+ if(std::isdigit(c) != 0)
+    printf("是数字\n") ;
+//来判断是否为字母，如果是字母那么返回非0
+else if(std::isalpha(c) != 0)
+    printf("是字母\n"); 
+```
+
+2、max_element
+
+找到最大位置 *max_element(x.begin(),x.end())即为最大元素
+
+3、toupper(), tolower() 转换
+
+4、string newres=string(res.rbegin(), res.rend()) 反转res这个字符串
+
+5、std::set_intersection() 求[交集](http://c.biancheng.net/view/556.html)，set_union() 求并集
+
+​		`set_intersection(begin(a), end(a),begin(b), end(b), back_inserter(y));`
+
+​		求a,b的交集并保存在y中。
+
+6、用flag split string
+
+```
+vector<string> split(string& data, char flag){
+        vector<string> s;
+        istringstream iss(data);
+        string temp;
+        while(getline(iss,temp,flag)){
+            s.push_back(temp);
+        }
+        return s;
+    }
+```
+
+
+
+## STL
+
+### `iota`
+
+为数组连续的值
+
+例如`iota(nums.begin(),nums.end(),0)`就会为数组nums从头开始依次赋值 0  1 2 3
+
+### `accumulate`[参考](https://blog.csdn.net/u011499425/article/details/52756242)
+
+累加求和
+
+`int sum = accumulate(vec.begin() , vec.end() , 42);`
+
+accumulate带有三个形参：头两个形参指定要累加的元素范围，第三个形参则是累加的初值。可以使用accumulate把string型的vector容器中的元素连接起来：
+
+`string sum = accumulate(v.begin() , v.end() , string(" "));`
+
+### `reserve`
+
+​	vector 的reserve增加了vector的capacity，但是它的size没有改变！而resize改变了vector的capacity同时也增加了它的size！
+ reserve是容器预留空间，但在空间内不真正创建元素对象，所以在没有添加新的对象之前，不能引用容器内的元素。加入新的元素时，要调用push_back()/insert()函数。
+
+   resize是改变容器的大小，且在创建对象，因此，调用这个函数之后，就可以引用容器内的对象了，因此当加入新的元素时，用operator[]操作符，或者用迭代器来引用元素对象。此时再调用push_back()函数，是加在这个新的空间后面的。
+
+###  `nth_element`
+
+举例 找到数组中最大的第K个值
+
+```c++
+  class Solution {
+  public:
+      int findKthLargest(vector<int>& nums, int k) {
+          nth_element(nums.begin(), nums.begin() + k - 1, nums.end(), greater<int>());
+          return nums[k - 1];
+      }
+  };
+```
+
+### `partial_sort`
+
+跟上面一个例子相同
+
+```c++
+  class Solution {
+  public:
+      int findKthLargest(vector<int>& nums, int k) {
+          partial_sort(nums.begin(), nums.begin() + k, nums.end(), greater<int>());
+          return nums[k - 1];
+      }
+  };
+```
+
+这两个不一样的是，partial_sort哪里用的是+k, 上面一个用的是+k-1这两个函数都是把第k个符合要求的数值放到它对应的位置上去，这里加了`greater<int>()`， 如果不加这个参数的话，默认的是第k个最小值。
+
+### **`priority_queue`**
+
+**首先要包含头文件`#include <queue>`**。priority_queue 优先队列，其底层是用堆来实现的。在优先队列中，**队首元素一定是当前队列中优先级最高的那一个。**在优先队列中，没有 front() 函数与 back() 函数，而**只能通过 top() 函数来访问队首元素**（也可称为堆顶元素），也就是优先级最高的元素。
+
+基本数据类型的优先级设置
+
+​		此处指的基本数据类型就是 int 型，double 型，char 型等可以直接使用的数据类型，优先队列对他们的优先级设置一般是数字大的优先级高，因此队首元素就是优先队列内元素最大的那个（如果是 char 型，则是字典序最大的）。
+
+```c++
+//下面两种优先队列的定义是等价的
+priority_queue<int> q;
+priority_queue<int,vector<int>,less<int> >;//后面有一个空格
+```
+
+其中第二个参数( vector )，是来承载底层数据结构堆的容器，第三个参数( less )，则是一个比较类，**less 表示数字大的优先级高，而 greater 表示数字小的优先级高**。
+
+如果想让优先队列总是把最小的元素放在队首，只需进行如下的定义：
+
+`priority_queue<int,vector<int>,greater<int> >q;`
+
+如果想重写比较函数，参考[博客](https://blog.csdn.net/qq_28114615/article/details/86495567#2.priority_queue%E4%B8%AD%E7%9A%84cmp)。
+
+例如
+
+```c++
+//注意queue比较函数的书写，要包装在struct里面，而且如果要写最小堆，就要是大于号,协助class外面。
+struct cmp
+{
+    bool operator ()(const vector<int>& a, const vector<int>& b)
+    {
+        if(a[0]==b[0]){
+            if(a[1]==b[1]){
+                return a[2]>b[2];
+            }
+            else return a[1]>b[1];
+        }
+        else return a[0]>b[0];
+    }
+};
+//sort的cmp的书写，写在class里面就行
+static bool cmp(const vector<int>& a, const vector<int>& b)
+    {
+        if(a[0]==b[0]){
+            if(a[1]==b[1]){
+                return a[2]>b[2];
+            }
+            else return a[1]>b[1];
+        }
+        else return a[0]>b[0];
+    }
+
+还可以直接在函数这样写
+auto cmp = [](int& a, int& b){return a<b;};
+sort(intervals.begin(), intervals.end(), cmp);
+
+一个新的例子,注意decltype（cmp）,与min_heap（cmp）,要写两次cmp
+auto cmp = [&nums1, &nums2](pair<int, int> a, pair<int, int> b) {
+            return nums1[a.first] + nums2[a.second] > nums1[b.first] + nums2[b.second];};
+        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(cmp)> min_heap(cmp);
+```
+
+一些常用函数
+
+push() 插入元素到队尾 (并排序)
+
+pop() 弹出队头元素
+
+top() 访问队头元素(如果只是queue,用front())
+
+关于deque和queue([区别](https://blog.csdn.net/qq_38665104/article/details/82191939))
+
+###  **multiset**
+
+**\#include <set>**  。multiset是<set>库中一个非常有用的类型，它可以看成一个序列，插入一个数，删除一个数都能够在`O(logn)`的时间内完成，而且他能时刻保证序列中的数是有序的，而且序列中可以存在重复的数。（个人理解这就是搜索二叉树的实现）
+
+sets和multisets在元素快速搜寻方面做了优化设计，提供了特殊的搜寻函数，所以应优先使用这些搜寻函数，可获得对数复杂度，而非STL的线性复杂度。
+
+count (elem)	 			    返回元素值为elem的个数
+
+find(elem) 					****    返回元素值为elem的第一个元素，如果没有返回end()
+
+lower_bound(elem) 	  返回元素值为elem的第一个可安插位置，也就是元素值 >= elem的第一个元素位置
+
+upper_bound (elem)	 返回元素值为elem的最后一个可安插位置，也就是元素值 > elem 的第一个元素位置
+
+(注意如果是vector arr,就是auto idx=lower_bound(arr.begin(),arr.end(),x); 返回的是迭代器)
+
+equal_range (elem) 		返回elem可安插的第一个位置和最后一个位置，也就是元素值==elem的区间
+
+
+
+c.insert(elem) 	 			 插入一个elem副本，返回新元素位置，无论插入成功与否。
+
+c.insert(pos, elem)      	安插一个elem元素副本，返回新元素位置，pos为收索起点，提升插入速度。
+
+c.insert(beg,end)  		   将区间[beg,end)所有的元素安插到c，无返回值。
+
+c.erase(elem) 				  删除与elem相等的所有元素，返回被移除的元素个数。
+
+c.erase(pos) 					移除迭代器pos所指位置元素，无返回值。
+
+c.erase(beg,end) 			移除区间[beg,end)所有元素，无返回值。
+
+c.clear()							 移除所有元素，将容器清空
+
+举例
+
+`multiset<int> mset;`从小到大的排序
+
+` multiset<int, greater<int>> mset(nums.begin(), nums.end());` 从大到小的排序
+
+### **map与unordered_map**
+
+前者是基于红黑树的数据结构，在map建立时候更快。后者是基于hashset的数据结构，在搜索等操作时只需要o(1)的复杂度。后者更节省空间，不过建立速度慢。
+
+对于那些有顺序要求的问题，用map会更高效一些。对于查找问题，unordered_map会更加高效一些，因此遇到查找问题，常会考虑一下用unordered_map。
+
+总结：
+
+内存占有率的问题就转化成红黑树 VS hash表 , 还是unorder_map占用的内存要高。但是unordered_map执行效率要比map高很多。对于unordered_map或unordered_set容器，其遍历顺序与创建该容器时输入的顺序不一定相同，因为遍历是按照哈希表从前往后依次遍历的。
+使用用法
+
+在使用时完全相同，二者都提供了 insert，size，count等操作，并且里面的元素也是以pair类型来存贮的。其底层实现是完全不同的，上方已经解释了，但是就外部使用来说却是一致的。以map为例进行介绍。
+
+构造函数： `map <int, int> m;`
+
+数据插入：`m.insert(pair<int, int>(1, 2));`  `m.insert(map<int, int>::value_type(1, 2));` 或者`m[1]=1;` 第三种方式在进行插入时可以覆盖已有的key，前两种方式不行。
+
+数据查找：m.find() 返回一个迭代器，如果key不存在返回的就是m.end()迭代器。
+
+数据的遍历：
+
+1）应用前向迭代器
+
+```
+map<int, int>:: iterator it;
+for ( it = m.begin(); it != m.end(); it++) {
+     // it->first       it->second
+}
+```
+
+2）应用反向迭代器
+
+```
+map<int, int>::reverse_iterator it;
+for ( it = m.rbegin(); it != m.rend(); it++) {
+    // it->first     
+}
+//注意 不能erase（x.rbegin()） 只能erase(--x.end())
+```
+
+3）用数组
+
+```
+m[1] = 1;
+m[2] = 2;
+for (int i = 1; i < m.size(); i++) {
+    cout << m[i] << endl;
+}
+```
+
+### **heap**
+
+heap堆其实是一种比较复杂的数据结构，尤其涉及到建堆和调整堆的时候。好在在STL中已经封装了heap的一些操作，可以让我们比较方便的使用堆。比如判断堆，删除一个元素，插入一个元素，以及堆排序。
+
+heap并不属于STL容器组件，它分为 max heap 和min heap，在缺省情况下，max-heap是优先队列（priority queue）的底层实现机制。
+
+而这个实现机制中的max-heap实际上是以一个vector表现的完全二叉树（complete binary tree）。
+二叉堆（binary heap）就是i一种完全二叉树。也即是。整棵二叉树除了最底层的叶节点以外，都是填满的，而最低层的叶子结点必须是从左到右不留空隙。
+至于max-heap和min-heap，前者的任何一个父亲结点都必须大于等于他的任意子结点，而后者相反。
+
+《在这里值得一提的是》，heap对于map/unordered_map的排序（大小排序方式）是根据key值来排序的。
+
+首先 你需要`#include <algorithm>`
+
+操作：
+
+1. make_heap()算法：建立一个堆。很简单吧。接受的参数同上。
+
+   ```c++
+    int** arr[] = {4,5,6,7,8,1}; 
+    vector<**int**>vectorArr(arr,arr + **sizeof**(arr) / **sizeof**(**int**)); 
+   // 构造最大堆 
+    make_heap(vectorArr.begin(), vectorArr.end(), less<**int**>()); 	
+    cout <<"_ _"<<is_heap(vectorArr.begin(), vectorArr.end()) << endl; 
+   ```
+
+   注意make_heap的第三个参数中，less<int>()为构造最大堆，greater<int>()为构造最小堆。此时判断is_heap即为true；默认大顶堆。
+
+2. push_heap()：新添加一个元素在末尾，然后重新调整堆序。也就是把元素添加在底层vector的end()处。该算法必须是在一个已经满足堆序的条件下，添加元素。该函数接受两个随机迭代器，分别表示first,end,区间范围。关键是我们执行一个siftup()函数，上溯函数来重新调整堆序。
+
+   ```c++
+   // 向堆中插入一个元素，默认插入在顶部  
+       vectorArr.push_back(100);  
+       cout << "_ _ _"<<is_heap(vectorArr.begin(), vectorArr.end()) << endl;  
+     
+       push_heap(vectorArr.begin(), vectorArr.end());  
+       cout <<"_ _ _ _"<<is_heap(vectorArr.begin(), vectorArr.end()) << endl;  
+   ```
+
+   
+
+3. pop_heap()这个算法跟push_heap类似，参数一样。不同的是我们把堆顶元素取出来，放到了数组或者是vector的末尾，用原来末尾元素去替代，然后end迭代器减1，执行siftdown()下溯函数来重新调整堆序。
+
+   ```c++
+   // 弹出一个元素，默认是首元素和尾元素交换，交换以后就不是正确的堆了；真正的删除需要去vector里面pop；  
+       pop_heap(vectorArr.begin(), vectorArr.end());  
+       cout <<"_ _ _ _ _"<<is_heap(vectorArr.begin(), vectorArr.end()) << endl;  
+     
+       vectorArr.pop_back();  
+       cout <<"_ _ _ _ _ _"<<is_heap(vectorArr.begin(), vectorArr.end()) << endl;  
+   ```
+
+   
+
+   注意算法执行完毕后，最大的元素并没有被取走，而是放于底层容器的末尾。如果要取走，则可以使用底部容器（vector）提供的pop_back()函数。
+
+4. sort_heap（）算法：既然每次pop_heap可以获得堆中最大的元素，那么我们持续对整个heap做pop_heap操作，每次将操作的范围向前缩减一个元素。sort_heap（） 算法：接受两个随机迭代器作为参数。表示操作的范围。
+
+   ```c++
+   // 堆排序, 堆排序后  
+       sort_heap(vectorArr.begin(), vectorArr.end());  
+       cout <<"_ _ _ _ _ _ _"<<is_heap(vectorArr.begin(), vectorArr.end()) << endl;  
+       for (int i = 0; i < vectorArr.size(); i++)  
+       {  
+           cout << vectorArr[i] << " ";  
+       }  
+   ```
+
+   
+
+### list
+
+Lists将元素按顺序储存在链表中. 与 向量(vectors)相比, 它允许快速的插入和删除，但是随机访问却比较慢. 
+
+back() 返回最后一个元素  begin() 返回指向第一个元素的迭代器 
+
+pop_back() 删除最后一个元素  pop_front() 删除第一个元素  push_back() 在list的末尾添加一个元素  push_front() 在list的头部添加一个元素 
+
+erase() 删除一个元素  front() 返回第一个元素 empty() 如果list是空的则返回true  end() 返回末尾的迭代器 
+
+
+

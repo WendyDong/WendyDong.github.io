@@ -1,0 +1,334 @@
+I"�g<blockquote>
+  <p>“Yeah It’s leetcode problem. ”</p>
+</blockquote>
+
+<h2 id="问题描述">问题描述</h2>
+
+<p>问题很容易理解，给定一个不重复的数组，求所有满足和为sum的数组可能性（返回的内容不重复）。</p>
+
+<p>Given a <strong>set</strong> of candidate numbers (<code class="highlighter-rouge">candidates</code>) <strong>(without duplicates)</strong> and a target number (<code class="highlighter-rouge">target</code>), find all unique combinations in <code class="highlighter-rouge">candidates</code> where the candidate numbers sums to <code class="highlighter-rouge">target</code>.</p>
+
+<p>The <strong>same</strong> repeated number may be chosen from <code class="highlighter-rouge">candidates</code> unlimited number of times.</p>
+
+<p>The solution set must not contain duplicate combinations.</p>
+
+<p><strong>Example:</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre>Input: candidates = [2,3,5], target = 8,
+A solution set is:
+[
+  [2,2,2,2],
+  [2,3,3],
+  [3,5]
+]
+
+Input: candidates = [2,3,6,7], target = 7,
+A solution set is:
+[
+  [7],
+  [2,2,3]
+]
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>Note:</strong></p>
+
+<p>这个问题吧，一看就知道使用backtracking的方法求解，不过这个题需要注意的是重复的问题，例如2-下面的再可能性应该为2,3,6,7 轮到3的时候，下一个就应该是3,6,7,因为之前已经考虑过包含2的情况了，所以这里不需要在考虑，否则返回的结果中就会有重复的数值。</p>
+
+<h2 id="知识储备">知识储备</h2>
+
+<p>这个题的DP思路是这样的：构建一个dp数组，里面存的内容 dp[i] 是<strong>从0到i的最长有效长度</strong>。能想到这一点，其实底下就好办了一点。</p>
+
+<p>如果s[i]为‘（ ’， 那么dp[i]就为0。</p>
+
+<p>如果s[i]为‘)’  那么如果s[i-1]为‘（ ’，也就是说是“…()…” 这样的形式，那dp[i]=2+dp[i-2]</p>
+
+<h3 id="1--vector-拷贝">1.  vector 拷贝</h3>
+
+<p><code class="highlighter-rouge">b.assign(a.begin()+i, a.end());</code></p>
+
+<p>以上代码将a中[i-结尾]的部分拷贝给了b</p>
+
+<h3 id="2-vector-排序">2. vector 排序</h3>
+
+<p><code class="highlighter-rouge">sort(candidates.begin(),candidates.end());</code></p>
+
+<h3 id="3-vector-求和">3. vector 求和</h3>
+
+<p><code class="highlighter-rouge">int sum=accumulate(a.begin(),a.end(),0);</code></p>
+
+<p>​	定义在#include<numeric>中 , accumulate带有三个形参：头两个形参指定要累加的元素范围，第三个形参则是累加的初值</numeric></p>
+
+<p><code class="highlighter-rouge">string sum = accumulate(v.begin() , v.end() , string(" "));</code></p>
+
+<p>这个函数调用的效果是：从空字符串开始，把vec里的每个元素连接成一个字符串。</p>
+
+<h2 id="backtracking代码">Backtracking代码</h2>
+
+<p>每次都会忘记pop_back()注意一下</p>
+
+<h3 id="代码1-使用vector记录已经运行到哪个位置了浪费空间">代码1： 使用vector记录已经运行到哪个位置了，浪费空间</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">combinationSum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">candidates</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">re</span><span class="p">;</span>
+        
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">candidates</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">temp</span><span class="p">;</span>
+            <span class="n">temp</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+            <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">temlist</span><span class="p">;</span>
+            <span class="n">temlist</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">candidates</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">i</span><span class="p">,</span> <span class="n">candidates</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+            <span class="n">DFS</span><span class="p">(</span><span class="n">temlist</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">re</span><span class="p">,</span><span class="n">target</span><span class="p">);</span>            
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">re</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="nl">private:</span>
+    <span class="kt">void</span> <span class="n">DFS</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">temlist</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">temp</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">re</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">){</span>
+        <span class="kt">int</span> <span class="n">cursum</span><span class="o">=</span><span class="n">accumulate</span><span class="p">(</span><span class="n">temp</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">temp</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">0</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cursum</span><span class="o">==</span><span class="n">target</span><span class="p">){</span>
+            <span class="n">re</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cursum</span><span class="o">&gt;</span><span class="n">target</span><span class="p">){</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span><span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">temlist</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+                <span class="n">temp</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">temlist</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+                <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">temlist2</span><span class="p">;</span>
+                <span class="n">temlist2</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">temlist</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span><span class="o">+</span><span class="n">i</span><span class="p">,</span> <span class="n">temlist</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+                <span class="n">DFS</span><span class="p">(</span><span class="n">temlist2</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">re</span><span class="p">,</span><span class="n">target</span><span class="p">);</span> 
+                <span class="c1">//别忘记</span>
+                <span class="n">temp</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="代码2改用一个int指针-记录已经遍历到哪了">代码2，改用一个int指针 记录已经遍历到哪了</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">combinationSum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">candidates</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">re</span><span class="p">;</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">temp</span><span class="p">;</span>
+        <span class="n">DFS</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">re</span><span class="p">,</span><span class="n">target</span><span class="p">);</span>            
+        
+        <span class="k">return</span> <span class="n">re</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="nl">private:</span>
+    <span class="kt">void</span> <span class="n">DFS</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">candidates</span><span class="p">,</span> <span class="kt">int</span> <span class="n">next</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">temp</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&amp;</span> <span class="n">re</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">){</span>
+        <span class="kt">int</span> <span class="n">cursum</span><span class="o">=</span><span class="n">accumulate</span><span class="p">(</span><span class="n">temp</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="n">temp</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="mi">0</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cursum</span><span class="o">==</span><span class="n">target</span><span class="p">){</span>
+            <span class="n">re</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">cursum</span><span class="o">&gt;</span><span class="n">target</span><span class="p">){</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span><span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span><span class="n">next</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">candidates</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+                <span class="n">temp</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">candidates</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+                <span class="n">DFS</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">temp</span><span class="p">,</span> <span class="n">re</span><span class="p">,</span><span class="n">target</span><span class="p">);</span> 
+                <span class="c1">//别忘记</span>
+                <span class="n">temp</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>以上两个代码都是直接传递的target, 中间就需要对vector求和判断是否等于target，过于复杂，其实可以每次传递target的时候传递target-curnum, 当target=0的时候就命中了。</p>
+
+<h3 id="代码三">代码三</h3>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+
+    <span class="kt">void</span> <span class="n">search</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">num</span><span class="p">,</span> <span class="kt">int</span> <span class="n">next</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">pSol</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">result</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">target</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">result</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pSol</span><span class="p">);</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="n">next</span> <span class="o">==</span> <span class="n">num</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">||</span> <span class="n">target</span> <span class="o">-</span> <span class="n">num</span><span class="p">[</span><span class="n">next</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="k">return</span><span class="p">;</span>
+            
+        <span class="n">pSol</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">num</span><span class="p">[</span><span class="n">next</span><span class="p">]);</span>
+        <span class="n">search</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">next</span><span class="p">,</span> <span class="n">pSol</span><span class="p">,</span> <span class="n">target</span> <span class="o">-</span> <span class="n">num</span><span class="p">[</span><span class="n">next</span><span class="p">],</span> <span class="n">result</span><span class="p">);</span>
+        <span class="n">pSol</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+        
+        <span class="n">search</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">next</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pSol</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    
+    <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">combinationSum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">num</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">result</span><span class="p">;</span>
+        <span class="n">sort</span><span class="p">(</span><span class="n">num</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">num</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+        <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">pSol</span><span class="p">;</span>
+        <span class="n">search</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pSol</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">result</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">;</span>    
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="dp代码">DP代码</h2>
+
+<p>DFS一般都可以用DP啦，这里也不例外，不过不太直观，我是看discuss看到的，参考一下。</p>
+
+<p>思想如下，先找到target=i时的所有组合H, 当target=j的时候，如果当前num=H[j-i], 那就把这个num加进H, 最后这个H就是target=j的时候的组合。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+</pre></td><td class="rouge-code"><pre><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="nl">public:</span>
+	<span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">combinationSum</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">candidates</span><span class="p">,</span> <span class="kt">int</span> <span class="n">target</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">vector</span><span class="o">&lt;</span> <span class="n">vector</span><span class="o">&lt;</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">combinations</span><span class="p">(</span><span class="n">target</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+		<span class="n">combinations</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">());</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">score</span> <span class="o">:</span> <span class="n">candidates</span><span class="p">)</span>
+			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">score</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">target</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">combinations</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">score</span><span class="p">].</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>	<span class="p">{</span>
+					<span class="k">auto</span> <span class="n">tmp</span> <span class="o">=</span> <span class="n">combinations</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="n">score</span><span class="p">];</span>
+					<span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="n">s</span> <span class="o">:</span> <span class="n">tmp</span><span class="p">)</span>
+						<span class="n">s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">score</span><span class="p">);</span>
+					<span class="n">combinations</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">insert</span><span class="p">(</span><span class="n">combinations</span><span class="p">[</span><span class="n">j</span><span class="p">].</span><span class="n">end</span><span class="p">(),</span> <span class="n">tmp</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">tmp</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+				<span class="p">}</span>
+		<span class="k">auto</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">combinations</span><span class="p">[</span><span class="n">target</span><span class="p">];</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ret</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+			<span class="n">sort</span><span class="p">(</span><span class="n">ret</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">(),</span> <span class="n">ret</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">end</span><span class="p">());</span>
+		<span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET

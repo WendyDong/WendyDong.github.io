@@ -1,0 +1,442 @@
+I"��<blockquote>
+  <p>“Yeah It’s leetcode problem. ”</p>
+</blockquote>
+
+<h2 id="一些小方法">一些小方法</h2>
+
+<p>1、判断一个char类型的字符是否为数字</p>
+
+<p>way1:</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="k">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span><span class="sc">'0'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span><span class="o">&lt;=</span><span class="sc">'9'</span><span class="p">)</span><span class="n">printf</span><span class="p">(</span><span class="s">"是数字</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="k">else</span>  <span class="nf">if</span><span class="p">(</span><span class="n">c</span> <span class="o">&gt;=</span><span class="sc">'a'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span><span class="o">&lt;=</span><span class="sc">'z'</span> <span class="o">||</span>  <span class="n">c</span> <span class="o">&gt;=</span><span class="sc">'A'</span> <span class="o">&amp;&amp;</span> <span class="n">c</span><span class="o">&lt;=</span><span class="sc">'Z'</span><span class="p">))</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"是字母</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>way2 :</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre> <span class="k">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">isdigit</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"是数字</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span> <span class="p">;</span>
+<span class="c1">//来判断是否为字母，如果是字母那么返回非0</span>
+<span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">isalpha</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"是字母</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span> 
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>2、max_element</p>
+
+<p>找到最大位置 *max_element(x.begin(),x.end())即为最大元素</p>
+
+<p>3、toupper(), tolower() 转换</p>
+
+<p>4、string newres=string(res.rbegin(), res.rend()) 反转res这个字符串</p>
+
+<p>5、std::set_intersection() 求<a href="http://c.biancheng.net/view/556.html">交集</a>，set_union() 求并集</p>
+
+<p>​		<code class="highlighter-rouge">set_intersection(begin(a), end(a),begin(b), end(b), back_inserter(y));</code></p>
+
+<p>​		求a,b的交集并保存在y中。</p>
+
+<p>6、用flag split string</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+</pre></td><td class="rouge-code"><pre>vector&lt;string&gt; split(string&amp; data, char flag){
+        vector&lt;string&gt; s;
+        istringstream iss(data);
+        string temp;
+        while(getline(iss,temp,flag)){
+            s.push_back(temp);
+        }
+        return s;
+    }
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="stl">STL</h2>
+
+<h3 id="iota"><code class="highlighter-rouge">iota</code></h3>
+
+<p>为数组连续的值</p>
+
+<p>例如<code class="highlighter-rouge">iota(nums.begin(),nums.end(),0)</code>就会为数组nums从头开始依次赋值 0  1 2 3</p>
+
+<h3 id="accumulate参考"><code class="highlighter-rouge">accumulate</code><a href="https://blog.csdn.net/u011499425/article/details/52756242">参考</a></h3>
+
+<p>累加求和</p>
+
+<p><code class="highlighter-rouge">int sum = accumulate(vec.begin() , vec.end() , 42);</code></p>
+
+<p>accumulate带有三个形参：头两个形参指定要累加的元素范围，第三个形参则是累加的初值。可以使用accumulate把string型的vector容器中的元素连接起来：</p>
+
+<p><code class="highlighter-rouge">string sum = accumulate(v.begin() , v.end() , string(" "));</code></p>
+
+<h3 id="reserve"><code class="highlighter-rouge">reserve</code></h3>
+
+<p>​	vector 的reserve增加了vector的capacity，但是它的size没有改变！而resize改变了vector的capacity同时也增加了它的size！
+ reserve是容器预留空间，但在空间内不真正创建元素对象，所以在没有添加新的对象之前，不能引用容器内的元素。加入新的元素时，要调用push_back()/insert()函数。</p>
+
+<p>resize是改变容器的大小，且在创建对象，因此，调用这个函数之后，就可以引用容器内的对象了，因此当加入新的元素时，用operator[]操作符，或者用迭代器来引用元素对象。此时再调用push_back()函数，是加在这个新的空间后面的。</p>
+
+<h3 id="nth_element"><code class="highlighter-rouge">nth_element</code></h3>
+
+<p>举例 找到数组中最大的第K个值</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>  <span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+      <span class="kt">int</span> <span class="n">findKthLargest</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">nth_element</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">greater</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">());</span>
+          <span class="k">return</span> <span class="n">nums</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+      <span class="p">}</span>
+  <span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="partial_sort"><code class="highlighter-rouge">partial_sort</code></h3>
+
+<p>跟上面一个例子相同</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre>  <span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+  <span class="nl">public:</span>
+      <span class="kt">int</span> <span class="n">findKthLargest</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">nums</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">partial_sort</span><span class="p">(</span><span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">nums</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">k</span><span class="p">,</span> <span class="n">nums</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">greater</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">());</span>
+          <span class="k">return</span> <span class="n">nums</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+      <span class="p">}</span>
+  <span class="p">};</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>这两个不一样的是，partial_sort哪里用的是+k, 上面一个用的是+k-1这两个函数都是把第k个符合要求的数值放到它对应的位置上去，这里加了<code class="highlighter-rouge">greater&lt;int&gt;()</code>， 如果不加这个参数的话，默认的是第k个最小值。</p>
+
+<h3 id="priority_queue"><strong><code class="highlighter-rouge">priority_queue</code></strong></h3>
+
+<p><strong>首先要包含头文件<code class="highlighter-rouge">#include &lt;queue&gt;</code></strong>。priority_queue 优先队列，其底层是用堆来实现的。在优先队列中，<strong>队首元素一定是当前队列中优先级最高的那一个。</strong>在优先队列中，没有 front() 函数与 back() 函数，而<strong>只能通过 top() 函数来访问队首元素</strong>（也可称为堆顶元素），也就是优先级最高的元素。</p>
+
+<p>基本数据类型的优先级设置</p>
+
+<p>​		此处指的基本数据类型就是 int 型，double 型，char 型等可以直接使用的数据类型，优先队列对他们的优先级设置一般是数字大的优先级高，因此队首元素就是优先队列内元素最大的那个（如果是 char 型，则是字典序最大的）。</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="c1">//下面两种优先队列的定义是等价的</span>
+<span class="n">priority_queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">q</span><span class="p">;</span>
+<span class="n">priority_queue</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span><span class="n">less</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="o">&gt;</span><span class="p">;</span><span class="c1">//后面有一个空格</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>其中第二个参数( vector )，是来承载底层数据结构堆的容器，第三个参数( less )，则是一个比较类，<strong>less 表示数字大的优先级高，而 greater 表示数字小的优先级高</strong>。</p>
+
+<p>如果想让优先队列总是把最小的元素放在队首，只需进行如下的定义：</p>
+
+<p><code class="highlighter-rouge">priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt; &gt;q;</code></p>
+
+<p>如果想重写比较函数，参考<a href="https://blog.csdn.net/qq_28114615/article/details/86495567#2.priority_queue%E4%B8%AD%E7%9A%84cmp">博客</a>。</p>
+
+<p>例如</p>
+
+<div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+</pre></td><td class="rouge-code"><pre><span class="c1">//注意queue比较函数的书写，要包装在struct里面，而且如果要写最小堆，就要是大于号,协助class外面。</span>
+<span class="k">struct</span> <span class="n">cmp</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="k">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]){</span>
+                <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+<span class="c1">//sort的cmp的书写，写在class里面就行</span>
+<span class="k">static</span> <span class="kt">bool</span> <span class="nf">cmp</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">]){</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">]){</span>
+                <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="k">else</span> <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&gt;</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+    <span class="p">}</span>
+
+<span class="err">还可以直接在函数这样写</span>
+<span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[](</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">){</span><span class="k">return</span> <span class="n">a</span><span class="o">&lt;</span><span class="n">b</span><span class="p">;};</span>
+<span class="n">sort</span><span class="p">(</span><span class="n">intervals</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">intervals</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">cmp</span><span class="p">);</span>
+
+<span class="err">一个新的例子</span><span class="p">,</span><span class="err">注意</span><span class="k">decltype</span><span class="err">（</span><span class="n">cmp</span><span class="err">）</span><span class="p">,</span><span class="err">与</span><span class="n">min_heap</span><span class="err">（</span><span class="n">cmp</span><span class="err">）</span><span class="p">,</span><span class="err">要写两次</span><span class="n">cmp</span>
+<span class="k">auto</span> <span class="n">cmp</span> <span class="o">=</span> <span class="p">[</span><span class="o">&amp;</span><span class="n">nums1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">nums2</span><span class="p">](</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">nums1</span><span class="p">[</span><span class="n">a</span><span class="p">.</span><span class="n">first</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums2</span><span class="p">[</span><span class="n">a</span><span class="p">.</span><span class="n">second</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">nums1</span><span class="p">[</span><span class="n">b</span><span class="p">.</span><span class="n">first</span><span class="p">]</span> <span class="o">+</span> <span class="n">nums2</span><span class="p">[</span><span class="n">b</span><span class="p">.</span><span class="n">second</span><span class="p">];};</span>
+        <span class="n">priority_queue</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span><span class="p">,</span> <span class="k">decltype</span><span class="p">(</span><span class="n">cmp</span><span class="p">)</span><span class="o">&gt;</span> <span class="n">min_heap</span><span class="p">(</span><span class="n">cmp</span><span class="p">);</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>一些常用函数</p>
+
+<p>push() 插入元素到队尾 (并排序)</p>
+
+<p>pop() 弹出队头元素</p>
+
+<p>top() 访问队头元素(如果只是queue,用front())</p>
+
+<p>关于deque和queue(<a href="https://blog.csdn.net/qq_38665104/article/details/82191939">区别</a>)</p>
+
+<h3 id="multiset"><strong>multiset</strong></h3>
+
+<p>**#include <set>**  。multiset是<set>库中一个非常有用的类型，它可以看成一个序列，插入一个数，删除一个数都能够在`O(logn)`的时间内完成，而且他能时刻保证序列中的数是有序的，而且序列中可以存在重复的数。（个人理解这就是搜索二叉树的实现）</set></set></p>
+
+<p>sets和multisets在元素快速搜寻方面做了优化设计，提供了特殊的搜寻函数，所以应优先使用这些搜寻函数，可获得对数复杂度，而非STL的线性复杂度。</p>
+
+<p>count (elem)	 			    返回元素值为elem的个数</p>
+
+<p>find(elem) 					<em>**</em>    返回元素值为elem的第一个元素，如果没有返回end()</p>
+
+<p>lower_bound(elem) 	  返回元素值为elem的第一个可安插位置，也就是元素值 &gt;= elem的第一个元素位置</p>
+
+<p>upper_bound (elem)	 返回元素值为elem的最后一个可安插位置，也就是元素值 &gt; elem 的第一个元素位置</p>
+
+<p>(注意如果是vector arr,就是auto idx=lower_bound(arr.begin(),arr.end(),x); 返回的是迭代器)</p>
+
+<p>equal_range (elem) 		返回elem可安插的第一个位置和最后一个位置，也就是元素值==elem的区间</p>
+
+<p>c.insert(elem) 	 			 插入一个elem副本，返回新元素位置，无论插入成功与否。</p>
+
+<p>c.insert(pos, elem)      	安插一个elem元素副本，返回新元素位置，pos为收索起点，提升插入速度。</p>
+
+<p>c.insert(beg,end)  		   将区间[beg,end)所有的元素安插到c，无返回值。</p>
+
+<p>c.erase(elem) 				  删除与elem相等的所有元素，返回被移除的元素个数。</p>
+
+<p>c.erase(pos) 					移除迭代器pos所指位置元素，无返回值。</p>
+
+<p>c.erase(beg,end) 			移除区间[beg,end)所有元素，无返回值。</p>
+
+<p>c.clear()							 移除所有元素，将容器清空</p>
+
+<p>举例</p>
+
+<p><code class="highlighter-rouge">multiset&lt;int&gt; mset;</code>从小到大的排序</p>
+
+<p><code class="highlighter-rouge"> multiset&lt;int, greater&lt;int&gt;&gt; mset(nums.begin(), nums.end());</code> 从大到小的排序</p>
+
+<h3 id="map与unordered_map"><strong>map与unordered_map</strong></h3>
+
+<p>前者是基于红黑树的数据结构，在map建立时候更快。后者是基于hashset的数据结构，在搜索等操作时只需要o(1)的复杂度。后者更节省空间，不过建立速度慢。</p>
+
+<p>对于那些有顺序要求的问题，用map会更高效一些。对于查找问题，unordered_map会更加高效一些，因此遇到查找问题，常会考虑一下用unordered_map。</p>
+
+<p>总结：</p>
+
+<p>内存占有率的问题就转化成红黑树 VS hash表 , 还是unorder_map占用的内存要高。但是unordered_map执行效率要比map高很多。对于unordered_map或unordered_set容器，其遍历顺序与创建该容器时输入的顺序不一定相同，因为遍历是按照哈希表从前往后依次遍历的。
+使用用法</p>
+
+<p>在使用时完全相同，二者都提供了 insert，size，count等操作，并且里面的元素也是以pair类型来存贮的。其底层实现是完全不同的，上方已经解释了，但是就外部使用来说却是一致的。以map为例进行介绍。</p>
+
+<p>构造函数： <code class="highlighter-rouge">map &lt;int, int&gt; m;</code></p>
+
+<p>数据插入：<code class="highlighter-rouge">m.insert(pair&lt;int, int&gt;(1, 2));</code>  <code class="highlighter-rouge">m.insert(map&lt;int, int&gt;::value_type(1, 2));</code> 或者<code class="highlighter-rouge">m[1]=1;</code> 第三种方式在进行插入时可以覆盖已有的key，前两种方式不行。</p>
+
+<p>数据查找：m.find() 返回一个迭代器，如果key不存在返回的就是m.end()迭代器。</p>
+
+<p>数据的遍历：</p>
+
+<p>1）应用前向迭代器</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>map&lt;int, int&gt;:: iterator it;
+for ( it = m.begin(); it != m.end(); it++) {
+     // it-&gt;first       it-&gt;second
+}
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>2）应用反向迭代器</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>map&lt;int, int&gt;::reverse_iterator it;
+for ( it = m.rbegin(); it != m.rend(); it++) {
+    // it-&gt;first     
+}
+//注意 不能erase（x.rbegin()） 只能erase(--x.end())
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>3）用数组</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre>m[1] = 1;
+m[2] = 2;
+for (int i = 1; i &lt; m.size(); i++) {
+    cout &lt;&lt; m[i] &lt;&lt; endl;
+}
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="heap"><strong>heap</strong></h3>
+
+<p>heap堆其实是一种比较复杂的数据结构，尤其涉及到建堆和调整堆的时候。好在在STL中已经封装了heap的一些操作，可以让我们比较方便的使用堆。比如判断堆，删除一个元素，插入一个元素，以及堆排序。</p>
+
+<p>heap并不属于STL容器组件，它分为 max heap 和min heap，在缺省情况下，max-heap是优先队列（priority queue）的底层实现机制。</p>
+
+<p>而这个实现机制中的max-heap实际上是以一个vector表现的完全二叉树（complete binary tree）。
+二叉堆（binary heap）就是i一种完全二叉树。也即是。整棵二叉树除了最底层的叶节点以外，都是填满的，而最低层的叶子结点必须是从左到右不留空隙。
+至于max-heap和min-heap，前者的任何一个父亲结点都必须大于等于他的任意子结点，而后者相反。</p>
+
+<p>《在这里值得一提的是》，heap对于map/unordered_map的排序（大小排序方式）是根据key值来排序的。</p>
+
+<p>首先 你需要<code class="highlighter-rouge">#include &lt;algorithm&gt;</code></p>
+
+<p>操作：</p>
+
+<ol>
+  <li>
+    <p>make_heap()算法：建立一个堆。很简单吧。接受的参数同上。</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre> <span class="kt">int</span><span class="o">**</span> <span class="n">arr</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">};</span> 
+ <span class="n">vector</span><span class="o">&lt;**</span><span class="kt">int</span><span class="o">**&gt;</span><span class="n">vectorArr</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">arr</span> <span class="o">+</span> <span class="o">**</span><span class="k">sizeof</span><span class="o">**</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span> <span class="o">/</span> <span class="o">**</span><span class="k">sizeof</span><span class="o">**</span><span class="p">(</span><span class="o">**</span><span class="kt">int</span><span class="o">**</span><span class="p">));</span> 
+<span class="c1">// 构造最大堆 </span>
+ <span class="n">make_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">less</span><span class="o">&lt;**</span><span class="kt">int</span><span class="o">**&gt;</span><span class="p">());</span> 	
+ <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"_ _"</span><span class="o">&lt;&lt;</span><span class="n">is_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span> 
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <p>注意make_heap的第三个参数中，less<int>()为构造最大堆，greater<int>()为构造最小堆。此时判断is_heap即为true；默认大顶堆。</int></int></p>
+  </li>
+  <li>
+    <p>push_heap()：新添加一个元素在末尾，然后重新调整堆序。也就是把元素添加在底层vector的end()处。该算法必须是在一个已经满足堆序的条件下，添加元素。该函数接受两个随机迭代器，分别表示first,end,区间范围。关键是我们执行一个siftup()函数，上溯函数来重新调整堆序。</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="c1">// 向堆中插入一个元素，默认插入在顶部  </span>
+    <span class="n">vectorArr</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>  
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"_ _ _"</span><span class="o">&lt;&lt;</span><span class="n">is_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>  
+     
+    <span class="n">push_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>  
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"_ _ _ _"</span><span class="o">&lt;&lt;</span><span class="n">is_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>  
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>
+    <p>pop_heap()这个算法跟push_heap类似，参数一样。不同的是我们把堆顶元素取出来，放到了数组或者是vector的末尾，用原来末尾元素去替代，然后end迭代器减1，执行siftdown()下溯函数来重新调整堆序。</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="c1">// 弹出一个元素，默认是首元素和尾元素交换，交换以后就不是正确的堆了；真正的删除需要去vector里面pop；  </span>
+    <span class="n">pop_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>  
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"_ _ _ _ _"</span><span class="o">&lt;&lt;</span><span class="n">is_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>  
+     
+    <span class="n">vectorArr</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>  
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"_ _ _ _ _ _"</span><span class="o">&lt;&lt;</span><span class="n">is_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>  
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <p>注意算法执行完毕后，最大的元素并没有被取走，而是放于底层容器的末尾。如果要取走，则可以使用底部容器（vector）提供的pop_back()函数。</p>
+  </li>
+  <li>
+    <p>sort_heap（）算法：既然每次pop_heap可以获得堆中最大的元素，那么我们持续对整个heap做pop_heap操作，每次将操作的范围向前缩减一个元素。sort_heap（） 算法：接受两个随机迭代器作为参数。表示操作的范围。</p>
+
+    <div class="language-c++ highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="c1">// 堆排序, 堆排序后  </span>
+    <span class="n">sort_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>  
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"_ _ _ _ _ _ _"</span><span class="o">&lt;&lt;</span><span class="n">is_heap</span><span class="p">(</span><span class="n">vectorArr</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>  
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">vectorArr</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>  
+    <span class="p">{</span>  
+        <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">vectorArr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>  
+    <span class="p">}</span>  
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+</ol>
+
+<h3 id="list">list</h3>
+
+<p>Lists将元素按顺序储存在链表中. 与 向量(vectors)相比, 它允许快速的插入和删除，但是随机访问却比较慢.</p>
+
+<p>back() 返回最后一个元素  begin() 返回指向第一个元素的迭代器</p>
+
+<p>pop_back() 删除最后一个元素  pop_front() 删除第一个元素  push_back() 在list的末尾添加一个元素  push_front() 在list的头部添加一个元素</p>
+
+<p>erase() 删除一个元素  front() 返回第一个元素 empty() 如果list是空的则返回true  end() 返回末尾的迭代器</p>
+
+:ET

@@ -1,0 +1,152 @@
+I"x<blockquote>
+  <p>“Come on！ ”</p>
+</blockquote>
+
+<h2 id="域名">域名</h2>
+
+<ul>
+  <li>在阿里云上花5元买了一个域名 dhhddd.xyz</li>
+  <li>给域名配置ssl免费证书, 下载到服务器上私钥</li>
+  <li>配置了之后，给域名添加路由，指向自己的服务器地址</li>
+</ul>
+
+<h2 id="服务器uginxuwsgiflask">服务器uginx+uwsgi+flask</h2>
+
+<ul>
+  <li>
+    <p>编写flask文件</p>
+
+    <p>pip install flask</p>
+
+    <p>例如 创建文件夹/root/server</p>
+
+    <p>创建文件 myapp.py，内容为 一个最简单的hello word</p>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="n">__name__</span><span class="p">)</span>
+
+<span class="o">@</span><span class="n">app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+        <span class="k">return</span> <span class="s">'hello dhhddd!!!'</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">'__main__'</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>
+    <p>安装uwsgi</p>
+
+    <p>pip install uwsgi可能会出现gcc版本不符，改成gcc4.8</p>
+
+    <p>/root/server创建一个config.ini文件 内容为</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre>[uwsgi]
+  
+http = 127.0.0.1:5000
+  
+chdir = /root/server/
+  
+python-autoreload=1
+wsgi-file = myapp.py
+  
+callable = app
+processes = 2
+threads = 4
+stats = 127.0.0.1:9191
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <p>记住5000这个端口号，其中的myapp.py就是你刚刚的python文件，  callable = app就是python文件里面的flask模块python-autoreload=1，python文件更新时自动更新uwsgi</p>
+
+    <p>启动程序，保存日志到/var/log/uwsgi.log里面</p>
+
+    <p>uwsgi –ini /root/server/config.ini –daemonize /var/log/uwsgi.log</p>
+
+    <p>停止 pkill -f uwsgi -9</p>
+  </li>
+  <li>
+    <p>安装uginx</p>
+
+    <p>apt-get install uginx</p>
+
+    <p>在/etc/uginx/下配置文件 nginx.conf， 内容为</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+</pre></td><td class="rouge-code"><pre>worker_processes 4;
+events { worker_connections 2048; }
+http {
+  include       /etc/nginx/mime.types;
+  default_type  application/octet-stream;
+  server {
+      listen 443 ssl;
+      server_name dhhddd.xyz;
+      charset utf-8;
+
+      ssl on;
+      ssl_certificate /etc/nginx/cer/3223477_dhhddd.xyz.pem;
+      ssl_certificate_key /etc/nginx/cer/3223477_dhhddd.xyz.key;
+      location / {
+       #   include /etc/nginx/uwsgi_params;
+        #  uwsgi_pass 127.0.0.1:8000;
+     		proxy_pass  http://localhost:5000;
+       }
+   }
+}
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+
+    <p>这个5000就是刚刚的端口，在这个文件里面还需要指定的下载的ssl文件，server_name指向你的域名</p>
+
+    <p>开启服务</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>  uginx -t
+  uginx -s reload
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>这时候就可以访问你的https://dhhddd.xyz网址了</p>
+
+:ET

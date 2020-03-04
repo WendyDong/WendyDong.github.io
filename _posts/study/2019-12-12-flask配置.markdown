@@ -1,0 +1,113 @@
+---
+layout:     post
+title:      "flask以及域名搭建"
+subtitle:   " 记录一下域名配置 "
+date:       2019-12-12 19:59:00
+author:     "DHH"
+header-img: "img/bg/hello.jpg"
+catalog: true
+tags:
+    - Flask
+    - 网站开发
+
+---
+
+
+> “Come on！ ”
+
+## 域名
+
+*  在阿里云上花5元买了一个域名 dhhddd.xyz
+*  给域名配置ssl免费证书, 下载到服务器上私钥
+*  配置了之后，给域名添加路由，指向自己的服务器地址
+
+## 服务器uginx+uwsgi+flask
+
+* 编写flask文件
+
+  pip install flask
+
+  例如 创建文件夹/root/server
+  
+  创建文件 myapp.py，内容为 一个最简单的hello word 
+  ```python
+  from flask import Flask
+  app = Flask(__name__)
+
+  @app.route('/')
+  def index():
+          return 'hello dhhddd!!!'
+
+  if __name__ == '__main__':
+      app.debug = True
+      app.run()
+  ```
+
+* 安装uwsgi
+
+  pip install uwsgi可能会出现gcc版本不符，改成gcc4.8
+
+  /root/server创建一个config.ini文件 内容为
+
+  ```
+  [uwsgi]
+  
+  http = 127.0.0.1:5000
+  
+  chdir = /root/server/
+  
+  python-autoreload=1
+  wsgi-file = myapp.py
+  
+  callable = app
+  processes = 2
+  threads = 4
+  stats = 127.0.0.1:9191
+  ```
+
+  记住5000这个端口号，其中的myapp.py就是你刚刚的python文件，  callable = app就是python文件里面的flask模块python-autoreload=1，python文件更新时自动更新uwsgi
+
+  启动程序，保存日志到/var/log/uwsgi.log里面
+
+  uwsgi --ini /root/server/config.ini --daemonize /var/log/uwsgi.log
+
+  停止 pkill -f uwsgi -9
+
+* 安装uginx
+
+  apt-get install uginx
+
+  在/etc/uginx/下配置文件 nginx.conf， 内容为
+
+  ```
+  worker_processes 4;
+  events { worker_connections 2048; }
+  http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+    server {
+        listen 443 ssl;
+        server_name dhhddd.xyz;
+        charset utf-8;
+
+        ssl on;
+        ssl_certificate /etc/nginx/cer/3223477_dhhddd.xyz.pem;
+        ssl_certificate_key /etc/nginx/cer/3223477_dhhddd.xyz.key;
+        location / {
+         #   include /etc/nginx/uwsgi_params;
+          #  uwsgi_pass 127.0.0.1:8000;
+       		proxy_pass  http://localhost:5000;
+         }
+     }
+  }
+  ```
+
+  这个5000就是刚刚的端口，在这个文件里面还需要指定的下载的ssl文件，server_name指向你的域名
+
+  开启服务
+
+        uginx -t
+        uginx -s reload
+
+这时候就可以访问你的https://dhhddd.xyz网址了
+

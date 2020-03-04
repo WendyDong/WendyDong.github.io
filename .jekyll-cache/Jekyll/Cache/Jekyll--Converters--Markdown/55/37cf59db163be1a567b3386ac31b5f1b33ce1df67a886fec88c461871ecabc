@@ -1,0 +1,20 @@
+I"�<blockquote>
+  <p>“Come on！ ”</p>
+</blockquote>
+
+<h2 id="学习资料">学习资料</h2>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=0CKeqXl5IY0&amp;feature=youtu.be">李宏毅视频</a>,  <a href="http://speech.ee.ntu.edu.tw/~tlkagk/courses/MLDS_2017/Lecture/GAN (v11).pdf">课件</a> 。</li>
+  <li><a href="https://zhuanlan.zhihu.com/p/32103958">知乎-gan小的总结</a>, <a href="https://zhuanlan.zhihu.com/p/52404647">知乎-gan训练技巧</a></li>
+</ul>
+
+<h2 id="内容速记">内容速记</h2>
+
+<h4 id="一vae-自编码器">一、VAE 自编码器</h4>
+
+<p>在VAE中，不仅会生成mi 向量，还会生成噪音，把噪音和m叠加在一起，再去decoder，不过在重建过程中，会倾向去把噪音的系数sigma置为0，所以引入了右下方的minimize。具体可参考<a href="https://www.cnblogs.com/fxjwind/p/9099931.html">VAE说明</a>。</p>
+
+<p><img src="E:\Users\William\AppData\OneDrive\DHH.github.io\img\study\VAE.png" alt="VAE" /></p>
+
+:ET
