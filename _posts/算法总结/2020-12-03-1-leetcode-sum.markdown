@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      " C++基础知识 "
-subtitle:   " C++基本用法 "
+title:      " leetcode 整理 "
+subtitle:   " leetcode 整理 "
 date:       2020-12-04 16:09:00
 author:     "DHH"
 header-img: "img/bg/leetcodebg.jpg"

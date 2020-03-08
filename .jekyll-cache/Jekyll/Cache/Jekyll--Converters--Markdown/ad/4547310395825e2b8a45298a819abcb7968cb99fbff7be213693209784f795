@@ -1,4 +1,4 @@
-I"}R<blockquote>
+I"��<blockquote>
   <p>“Yeah It’s leetcode problem. ”</p>
 </blockquote>
 
@@ -6,7 +6,31 @@
 
 <h3 id="sift"><a href="https://blog.csdn.net/zddblog/article/details/7521424">sift</a></h3>
 
-<p>生成高斯差分金字塔,尺度空间构建,空间极值点检测,稳定关键点的精确定位,稳定关键点方向信息分配,关键点描述,特征点匹配。</p>
+<p>生成高斯差分金字塔,尺度空间构建,（使用高斯差分金字塔近似LoG算子）</p>
+
+<p>空间极值点检测（中间的检测点和它同尺度的8个相邻点和上下相邻尺度对应的9×2个点共26个点比较，以确保在尺度空间和二维图像空间都检测到极值点。）,</p>
+
+<p>稳定关键点的精确定位, （去除低对比度的关键点和不稳定的边缘响应点，利用已知的离散空间点插值得到的连续空间极值点的方法叫做子像素插值）</p>
+
+<p>稳定关键点方向信息分配（,使用直方图统计邻域内像素的梯度和方向，直方图的峰值方向代表了关键点的主方向</p>
+
+<p>关键点描述（SIFT描述子是关键点邻域高斯图像梯度统计结果的一种表示。通过对关键点周围图像区域分块，计算块内梯度直方图，生成具有独特性的向量，这个向量是该区域图像信息的一种抽象，具有唯一性。）</p>
+
+<p>特征点匹配。</p>
+
+<h3 id="色彩迁移-参考"><strong>色彩迁移</strong> <a href="http://www.mamicode.com/info-detail-2301867.html">参考</a></h3>
+
+<p>RGB三通道有很强的关联性，而做颜色的改变同时恰当地改变三通道比较困难。</p>
+
+<p>需要寻找三通道互不相关的也就是正交的颜色空间，作者想到了Ruderman等人提出的lαβ颜色空间。三个轴向正交意味着改变任何一个通道都不影响其他通道，从而能够较好的保持原图的自然效果。三个通道分别代表：亮度，黄蓝通道，红绿通道。</p>
+
+<p>要操作的图片称作源图片（source），想要转成的颜色风格成为目标图片（target）。</p>
+
+<p>分通道计算源图片的均值和标准差，分通道计算目标图片的均值和标准差。</p>
+
+<p>源图片逐像素减均值（减去对应通道的均值）： 乘目标图片与源图片标准差的比值：加上目标图片的均值。</p>
+
+<p>整个过程可以简单描述为：分通道计算，减去自己的均值，除以自己的方差，乘目标的方差，加目标的均值。</p>
 
 <h3 id="surf"><a href="https://blog.csdn.net/blateyang/article/details/76512398">surf</a></h3>
 
@@ -22,12 +46,101 @@
 
 <p><a href="https://zhuanlan.zhihu.com/p/25071913">参考</a></p>
 
+<p>做法：</p>
+
 <ul>
-  <li>判别器最后一层去掉sigmoid (把分类变成了回归)</li>
-  <li>生成器和判别器的loss不取log</li>
-  <li>每次更新判别器的参数之后把它们的绝对值截断到不超过一个固定常数c</li>
-  <li>不要用基于动量的优化算法（包括momentum和Adam），推荐RMSProp，SGD也行 （梯度本身就是不稳定的）</li>
+  <li>
+    <p>判别器最后一层去掉sigmoid (把分类变成了回归)</p>
+  </li>
+  <li>
+    <p>生成器和判别器的loss不取log</p>
+  </li>
+  <li>
+    <p>每次更新判别器的参数之后把它们的绝对值截断到不超过一个固定常数c</p>
+  </li>
+  <li>
+    <p>不要用基于动量的优化算法（包括momentum和Adam），推荐RMSProp，SGD也行 （梯度本身就是不稳定的）</p>
+  </li>
 </ul>
+
+<p>好处：</p>
+
+<ul>
+  <li>
+    <p>彻底解决GAN训练不稳定的问题，不再需要小心平衡生成器和判别器的训练程度</p>
+  </li>
+  <li>
+    <p>基本解决了collapse mode的问题，确保了生成样本的多样性</p>
+  </li>
+  <li>
+    <p>训练过程中终于有一个像交叉熵、准确率这样的数值来指示训练的进程，这个数值越小代表GAN训练得越好，代表生成器产生的图像质量越高（如题图所示）</p>
+  </li>
+  <li>
+    <p>以上一切好处不需要精心设计的网络架构，最简单的多层全连接网络就可以做到</p>
+  </li>
+</ul>
+
+<p>原因：</p>
+
+<ol>
+  <li>原始GAN的第一种loss</li>
+</ol>
+
+<p>根据原始GAN定义的判别器loss，我们可以得到最优判别器的形式；而在最优判别器的下，我们可以把原始GAN定义的生成器loss等价变换为最小化真实分布<img src="https://www.zhihu.com/equation?tex=P_r" alt="[公式]" />与生成分布<img src="https://www.zhihu.com/equation?tex=P_g" alt="[公式]" />之间的JS散度。通过分析JS散度，对于最优判别器，无论<img src="https://www.zhihu.com/equation?tex=P_r" alt="[公式]" />跟<img src="https://www.zhihu.com/equation?tex=P_g%0A" alt="[公式]" />是远在天边，还是近在眼前，只要它们俩没有一点重叠或者重叠部分可忽略，JS散度就固定是常数<img src="https://www.zhihu.com/equation?tex=%5Clog+2" alt="[公式]" />，<strong>而这对于梯度下降方法意味着——梯度为0</strong>！此时对于最优判别器来说，生成器肯定是得不到一丁点梯度信息的；即使对于接近最优的判别器来说，生成器也有很大机会面临梯度消失的问题。</p>
+
+<p>有了这些理论分析，原始GAN不稳定的原因就彻底清楚了：判别器训练得太好，生成器梯度消失，生成器loss降不下去；判别器训练得不好，生成器梯度不准，四处乱跑。只有判别器训练得不好不坏才行，但是这个火候又很难把握，甚至在同一轮训练的前后不同阶段这个火候都可能不一样，所以GAN才那么难训练。</p>
+
+<p>（解决方法：对生成样本和真实样本加噪声，但是 不能成为<img src="https://www.zhihu.com/equation?tex=P_r" alt="[公式]" />和<img src="https://www.zhihu.com/equation?tex=P_g" alt="[公式]" />距离的本质性衡量）</p>
+
+<ol>
+  <li>原始GAN的第二种loss:<strong>collapse mode</strong></li>
+</ol>
+
+<p>因为KL散度不是一个对称的衡量，<img src="https://www.zhihu.com/equation?tex=KL%28P_g+%7C%7C+P_r%29" alt="[公式]" />与<img src="https://www.zhihu.com/equation?tex=KL%28P_r+%7C%7C+P_g%29" alt="[公式]" />是有差别的。以前者为例，<img src="https://www.zhihu.com/equation?tex=KL%28P_g+%7C%7C+P_r%29" alt="[公式]" />对于上面两种错误的惩罚是不一样的，第一种错误对应的是“生成器没能生成真实的样本”，惩罚微小；第二种错误对应的是“生成器生成了不真实的样本” ，惩罚巨大。第一种错误对应的是缺乏多样性，第二种错误对应的是缺乏准确性。</p>
+
+<ol>
+  <li>解决：Wasserstein距离的优越性质</li>
+</ol>
+
+<p>Wasserstein距离又叫Earth-Mover（EM）距离，定义如下：</p>
+
+<p><img src="https://www.zhihu.com/equation?tex=W%28P_r%2C+P_g%29+%3D+%5Cinf_%7B%5Cgamma+%5Csim+%5CPi+%28P_r%2C+P_g%29%7D+%5Cmathbb%7BE%7D_%7B%28x%2C+y%29+%5Csim+%5Cgamma%7D+%5B%7C%7Cx+-+y%7C%7C%5D" alt="[公式]" />（公式12）</p>
+
+<p>Wasserstein距离相比KL散度、JS散度的优越性在于，即便两个分布没有重叠，Wasserstein距离仍然能够反映它们的远近。</p>
+
+<p><img src="https://www.zhihu.com/equation?tex=W%28P_r%2C+P_g%29+%3D+%5Cfrac%7B1%7D%7BK%7D+%5Csup_%7B%7C%7Cf%7C%7C_L+%5Cleq+K%7D+%5Cmathbb%7BE%7D_%7Bx+%5Csim+P_r%7D+%5Bf%28x%29%5D+-+%5Cmathbb%7BE%7D_%7Bx+%5Csim+P_g%7D+%5Bf%28x%29%5D" alt="[公式]" />（公式13）</p>
+
+<p><img src="https://www.zhihu.com/equation?tex=%7Cf%28x_1%29+-+f%28x_2%29%7C+%5Cleq+K+%7Cx_1+-+x_2%7C" alt="[公式]" /></p>
+
+<p><img src="https://www.zhihu.com/equation?tex=K+%5Ccdot+W%28P_r%2C+P_g%29+%5Capprox+%5Cmax_%7Bw%3A+%7Cf_w%7C_L+%5Cleq+K%7D+%5Cmathbb%7BE%7D_%7Bx+%5Csim+P_r%7D+%5Bf_w%28x%29%5D+-+%5Cmathbb%7BE%7D_%7Bx+%5Csim+P_g%7D+%5Bf_w%28x%29%5D" alt="[公式]" />（公式14）</p>
+
+<p>最后，还不能忘了满足公式14中<img src="https://www.zhihu.com/equation?tex=%7C%7Cf_w%7C%7C_L+%5Cleq+K" alt="[公式]" />这个限制。我们其实不关心具体的K是多少，只要它不是正无穷就行，因为它只是会使得梯度变大<img src="https://www.zhihu.com/equation?tex=K" alt="[公式]" />倍，并不会影响梯度的方向。所以作者采取了一个非常简单的做法，就是限制神经网络<img src="https://www.zhihu.com/equation?tex=f_%5Ctheta" alt="[公式]" />的所有参数<img src="https://www.zhihu.com/equation?tex=w_i" alt="[公式]" />的不超过某个范围<img src="https://www.zhihu.com/equation?tex=%5B-c%2C+c%5D" alt="[公式]" />。</p>
+
+<p>注意原始GAN的判别器做的是真假二分类任务，所以最后一层是sigmoid，但是现在WGAN中的判别器<img src="https://www.zhihu.com/equation?tex=f_w" alt="[公式]" />做的是近似拟合Wasserstein距离，属于回归任务，所以要把最后一层的sigmoid拿掉。</p>
+
+<h2 id="模型压缩知识蒸馏">模型压缩/知识<a href="如何理解soft target这一做法？ - YJango的回答 - 知乎 https://www.zhihu.com/question/50519680/answer/136406661">蒸馏</a></h2>
+
+<p>这种方法感觉受到了ensemble的启发，利用大型（teacher net）网络提取先验知识，将这种先验知识作为soft target让微型网络（student network）学习,有点像Boost中第一个分类器学到后调整weight让第二个分类器学习。当然相似中也有不同之处。</p>
+
+<p>​	通过复杂网络产生的分类概率分布作为<strong>soft target</strong>来训练小模型。</p>
+
+<p>​	加入蒸馏后的softmax函数：	<img src="/_posts/笔试题目/2020-12-04-1-CV/image-20200304175316267.png" alt="image-20200304175316267" /></p>
+
+<p>​	这里T是超参数，文中说是‘温度’，经过该参数之后的softmax会更加平滑（T越大越平滑），分布更加均匀而大小关系不变。T参数在设置为1的时候就是平常的softmax函数。
+ <strong>在知识转换阶段，设置复杂网络与简易网络相同的T参数。在此之后再从新将T设置为1</strong></p>
+
+<p><img src="https://img-blog.csdn.net/20180306210740358?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvcXFfMjI3NDk2OTk=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="具体过程" /></p>
+
+<p>1、训练大模型：先用hard target，也就是正常的label训练大模型。
+2、计算soft target：利用训练好的大模型来计算soft target。也就是大模型“软化后”再经过softmax的output。
+3、训练小模型，在小模型的基础上再加一个额外的soft target的loss function，通过lambda来调节两个loss functions的比重。在做梯度下降时应该将soft target的梯度乘以T^2。
+4、预测时，将训练好的小模型按常规方式（右图）使用。</p>
+
+<p>soft target的理解：</p>
+
+<p>1 可以使用teacher model对于每个样本输出一个连续的label分布，这样可以利用的监督信息就远比one hot的多了。可以想象如果只有label这样的一个目标的话，那么这个模型的目标就是把训练样本中每一类的样本强制映射到同一个点上，这样其实对于训练很有帮助的类内variance和类间distance就损失掉了。然而使用teacher model的输出可以恢复出这方面的信息。</p>
+
+<p><strong>2 soft target是加入了关于想要拟合的mapping的prior knowledge，降低了神经网络的搜索空间，从而获得了泛化（generalization）能力。</strong></p>
 
 <h2 id="目标检测参考">目标检测(<a href="https://baijiahao.baidu.com/s?id=1598999301741831102&amp;wfr=spider&amp;for=pc">参考</a>)</h2>
 
@@ -143,6 +256,8 @@ RoI Pooling Layer根据RPN的输出在feature map上面选取每个RoI对应的�
 
 <h3 id="focal-loss"><a href="https://blog.csdn.net/qwer7512090/article/details/93136325">focal loss</a></h3>
 
+<p><img src="/_posts/笔试题目/2020-12-04-1-CV/image-20200305131202471.png" alt="image-20200305131202471" /></p>
+
 <p>上下采样</p>
 
 <p>提前困难样本挖掘</p>
@@ -164,6 +279,10 @@ RoI Pooling Layer根据RPN的输出在feature map上面选取每个RoI对应的�
 <p><a href="https://zhuanlan.zhihu.com/p/46536960">拟牛顿法</a>的<a href="https://blog.csdn.net/itplus/article/details/21896453">原理</a></p>
 
 <p>牛顿法的收敛速度快,迭代次数少,但是Hessian矩阵很稠密时,每次迭代的计算量很大,随着数据规模增大,Hessian矩阵也会变大,需要更多的存储空间以及计算量。拟牛顿法就是在牛顿法的基础上引入了Hessian矩阵的近似矩阵,避免了每次都计算Hessian矩阵的逆,在拟牛顿法中,用Hessian矩阵的逆矩阵来代替Hessian矩阵,虽然不能像牛顿法那样保证最优化的方向,但其逆矩阵始终是正定的,因此算法始终朝最优化的方向搜索。</p>
+
+<h3 id="11卷积核好处">1*1卷积核好处</h3>
+
+<p>专注于跨通道的特征组合；对feature map的channel级别降维或升维；增加非线性能力</p>
 
 <h3 id="感受野"><a href="https://blog.csdn.net/program_developer/article/details/80958716">感受野</a></h3>
 
@@ -189,17 +308,56 @@ RoI Pooling Layer根据RPN的输出在feature map上面选取每个RoI对应的�
 
 <p>解决了分类器不好处理属性数据的问题，让特征之间的距离计算更加合理;在一定程度上也起到了扩充特征的作用，比如性别本身是一个特征，经过one hot编码以后，就变成了男或女两个特征;将离散特征的取值扩展到了欧式空间，离散特征的某个取值就对应欧式空间的某个点。</p>
 
-<h3 id="pooling-意义">[pooling] 意义</h3>
+<p>One-hot是对低维高信息量的特征在高维中进行打散，使之在模型中更容易被优化/学习(拟合难度降低)</p>
+
+<h3 id="pooling意义">pooling意义</h3>
 
 <p>增大深层卷积的感受野。降维减少参数量和减少卷积后的冗余。</p>
 
 <p>具有局部平移不变形，提高网络效率</p>
 
-<h3 id="inception-xception-vgg-mobilenet-与xception区别"><a href="https://baijiahao.baidu.com/s?id=1601882944953788623&amp;wfr=spider&amp;for=pc">inception</a> <a href="https://blog.csdn.net/lk3030/article/details/84847879">xception</a> <a href="https://blog.csdn.net/jyy555555/article/details/80515562">VGG</a> <a href="https://www.cnblogs.com/dengshunge/p/11334640.html">mobilenet</a> 与xception<a href="https://blog.csdn.net/u013548568/article/details/79910669">区别</a></h3>
+<h3 id="inception"><a href="https://baijiahao.baidu.com/s?id=1601882944953788623&amp;wfr=spider&amp;for=pc">inception</a></h3>
+
+<p><strong>inceptionV1</strong></p>
+
+<p><img src="/_posts/笔试题目/2020-12-04-1-CV/image-20200305133138163.png" alt="image-20200305133138163" />左边的是一般的版本，右边的是改进的版本</p>
+
+<p><strong>v2</strong></p>
+
+<p>变化1：(引入了BN层，把5x5的换成两个3x3的)</p>
+
+<p>变化2：（使用两个1<em>n和n</em>1的卷积核取代n<em>n的卷积核。这样做，相比把5</em>5用两个3*3代替更加参数量少，加速了网络的变化。同时增加了一层非线性扩展模型表达能力。论文解释说，这种非对称的卷积结构拆分，其结果比对称地拆为几个相同的小卷积核效果更明显，可以处理更多、更丰富的空间特征，增加特征多样性;</p>
+
+<p>变化3： 模块中的滤波器组被扩展（即变得更宽而不是更深），以解决表征性瓶颈。如果该模块没有被拓展宽度，而是变得更深，那么维度会过多减少，造成信息损失。如下图所示：</p>
+
+<p><strong>v3:</strong>整合了前面 Inception v2 中提到的所有升级,RMSProp 优化器；Factorized 7x7 卷积；辅助分类器使用了 BatchNorm；标签平滑（添加到损失公式的一种正则化项，旨在阻止网络对某一类别过分自信，即阻止过拟合）。</p>
+
+<p><strong>v4</strong> 使用了不同的 Inception Block,然后堆叠成Inception V4</p>
+
+<p>Inception-Resnet 结合了resnet的残差。</p>
 
 <p>mobileNet、shufflenet的原理？说了下原理。</p>
 
 <p>​				为什么mobileNet在理论上速度很快，工程上并没有特别大的提升？ 先说了卷积源码上的实现，两个超大矩阵相乘，可能是group操作，是一些零散的卷积操作，速度会慢。（大佬觉得不满意，说应该从内存上去考虑。申请空间？确实不太清楚。）</p>
+
+<h3 id="vgg"><a href="https://blog.csdn.net/jyy555555/article/details/80515562">VGG</a></h3>
+
+<ol>
+  <li>
+    <p><strong>小卷积核。</strong>作者将卷积核全部替换为3x3（极少用了1x1）；更多的激活函数、更丰富的特征，更强的辨别能力。卷积层的参数减少</p>
+  </li>
+  <li>
+    <p><strong>小池化核。</strong>相比AlexNet的3x3的池化核，VGG全部为2x2的池化核；在图像任务上max-pooling的效果更胜一筹，所以图像大多使用max-pooling。在这里我认为max-pooling更容易捕捉图像上的变化，梯度的变化，带来更大的局部信息差异性，更好地描述边缘、纹理等构成语义的细节信息，这点尤其体现在网络可视化上。</p>
+  </li>
+  <li>
+    <p><strong>层数更深特征图更宽。</strong>基于前两点外，由于卷积核专注于扩大通道数、池化专注于缩小宽和高，使得模型架构上更深更宽的同时，计算量的增加放缓；</p>
+  </li>
+  <li>
+    <p><strong>全连接转卷积。</strong>网络测试阶段将训练阶段的三个全连接替换为三个卷积，测试重用训练时的参数，使得测试得到的全卷积网络因为没有全连接的限制，因而可以接收任意宽或高为的输入。在测试阶段把网络中原本的三个全连接层依次变为1个conv7x7，2个conv1x1，</p>
+  </li>
+</ol>
+
+<h3 id="xception--mobilenet-与xception区别"><a href="https://blog.csdn.net/lk3030/article/details/84847879">xception</a>  <a href="https://www.cnblogs.com/dengshunge/p/11334640.html">mobilenet</a> 与xception<a href="https://blog.csdn.net/u013548568/article/details/79910669">区别</a></h3>
 
 <h3 id="flops计算">Flops计算：</h3>
 
