@@ -76,13 +76,15 @@ vector<string> split(string& data, char flag){
 
 ### `accumulate`[参考](https://blog.csdn.net/u011499425/article/details/52756242)
 
+\#include<numeric>
+
 累加求和
 
 `int sum = accumulate(vec.begin() , vec.end() , 42);`
 
 accumulate带有三个形参：头两个形参指定要累加的元素范围，第三个形参则是累加的初值。可以使用accumulate把string型的vector容器中的元素连接起来：
 
-`string sum = accumulate(v.begin() , v.end() , string(" "));`
+`string sum = accumulate(v.begin() , v.end() , string(""));`
 
 ### `reserve`
 
@@ -360,7 +362,13 @@ back() 返回最后一个元素  begin() 返回指向第一个元素的迭代器
 
 pop_back() 删除最后一个元素  pop_front() 删除第一个元素  push_back() 在list的末尾添加一个元素  push_front() 在list的头部添加一个元素 
 
-erase() 删除一个元素  front() 返回第一个元素 empty() 如果list是空的则返回true  end() 返回末尾的迭代器 
+erase() 删除一个元素 
+
+ front() 返回第一个元素 
+
+empty() 如果list是空的则返回true  
+
+end() 返回末尾的迭代器 
 
 
 

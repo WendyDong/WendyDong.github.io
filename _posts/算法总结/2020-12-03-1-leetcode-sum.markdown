@@ -66,7 +66,13 @@ typora-root-url: ..\..
 
 ​		[leetcode 30](https://leetcode.com/problems/substring-with-concatenation-of-all-words) Substring with Concatenation of All Words 和76很像
 
-​		
+​	
+
+### 贪心
+
+​		[leetcode 1383](https://leetcode.com/problems/maximum-performance-of-a-team/) Maximum Performance of a Team
+
+​        [leetcode 857](https://leetcode.com/problems/minimum-cost-to-hire-k-workers/) Minimum Cost to Hire K Workers
 
 ### 图的问题
 
