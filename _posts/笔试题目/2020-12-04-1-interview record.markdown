@@ -28,7 +28,7 @@ typora-root-url: ..\..
 
 4.  map recall precision [参考](https://blog.csdn.net/mdjxy63/article/details/79822555)
 
-5. Focal loss 有几个参数可以调节?
+5. Focal loss 有几个参数可以调节?（手写）
 
    两个，一个用于控制样本的困难程度的权重，一个用于控制样本的数量对应的权重
 
@@ -37,3 +37,11 @@ typora-root-url: ..\..
    混合在一起
 
 7. Sigmoid（多标签分类）和softmax(多分类）有什么不同
+
+8. 快排的优化
+
+   **随机选取基准**；**三数取中**
+
+   **当待排序序列的长度分割到一定大小后，使用插入排序**
+
+   **在一次分割结束后，可以把与Key相等的元素聚在一起**
