@@ -142,6 +142,8 @@ typora-root-url: ..\..
 
 ​		[leetcode 336](https://leetcode.com/problems/palindrome-pairs/) Palindrome Pairs 可以用hashtable, 也可以用字典树
 
+​		[leetcode 459](https://leetcode.com/problems/repeated-substring-pattern/) Repeated Substring Pattern 一个KMP的应用
+
 ### SORT
 
  		[leetcode 148](https://leetcode.com/problems/sort-list/) Sort List 对一个链表进行排序，时间复杂度为o(nlgn)，空间复杂度为o(1) 。应该自然想到需要使用归并排序。
